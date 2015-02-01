@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>home-parent</artifactId>
+        <groupId>com.furnaghan.home</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>component-tv-bravia</artifactId>
+
+    <properties>
+        <sony-bravia-client.version>0.2</sony-bravia-client.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-tv</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jamierf</groupId>
+            <artifactId>sony-bravia-client</artifactId>
+            <version>${sony-bravia-client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>home-parent</artifactId>
+        <groupId>com.furnaghan.home</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>component-feed-rss</artifactId>
+
+    <properties>
+        <jackson-xml.version>2.3.3</jackson-xml.version>
+        <woodstox.version>4.1.4</woodstox.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-feed</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-xml-provider</artifactId>
+            <version>${jackson-xml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-asl</artifactId>
+            <version>${woodstox.version}</version>
+        </dependency>
+    </dependencies>
+</project>
