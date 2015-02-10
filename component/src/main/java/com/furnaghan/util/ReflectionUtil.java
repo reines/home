@@ -3,8 +3,11 @@ package com.furnaghan.util;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public final class ReflectionUtil {
 
@@ -31,6 +34,16 @@ public final class ReflectionUtil {
             }
         }
         return result.build();
+    }
+
+    public static <T> void checkReturnType(final Method method, final Class<T> resultType) {
+        checkReturnType(method, resultType, String.format("Return type of %s is %s, not %s",
+                method.getName(), method.getReturnType(), resultType));
+    }
+
+    public static <T> void checkReturnType(final Method method, final Class<T> resultType, final Object errorMessage) {
+        checkArgument(Void.class.isAssignableFrom(resultType) || resultType.isAssignableFrom(method.getReturnType()),
+                errorMessage);
     }
 
     private ReflectionUtil() {}

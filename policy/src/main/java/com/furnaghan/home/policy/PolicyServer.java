@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.furnaghan.home.policy.EventListener.proxy;
+import static com.furnaghan.util.ReflectionUtil.checkReturnType;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class PolicyServer {
@@ -26,7 +27,7 @@ public class PolicyServer {
         final PolicyServer server = new PolicyServer();
 
         server.register("test_clock", new SystemClockComponent());
-        server.trigger("test_clock", "test", "hello world");
+        server.call("test_clock", "testAction", "hello world");
     }
 
     private final Map<String, Component<?>> components;
@@ -65,14 +66,16 @@ public class PolicyServer {
     }
 
     /**
-     * Triggers an action upon a named component.
+     * Triggers an action upon a named component, and returns the result.
      *
      * @param name                          The name of the component on which to trigger the acton.
      * @param action                        The name of the action to trigger.
+     * @param resultType                    The type of result to be returned.
      * @param args                          Arguments to pass to the action.
      * @throws IllegalArgumentException     If there is no action with the given name and argument types.
      */
-    public void trigger(final String name, final String action, final Object... args) {
+    @SuppressWarnings("unchecked")
+    public <T> T call(final String name, final String action, final Class<T> resultType, final Object... args) {
         final Optional<Component<?>> component = getComponent(name);
         checkArgument(component.isPresent(), "Unknown component: " + name);
 
@@ -81,7 +84,9 @@ public class PolicyServer {
 
         try {
             final Method method = type.getMethod(action, argTypes);
-            method.invoke(component.get(), args);
+            checkReturnType(method, resultType);
+
+            return (T) method.invoke(component.get(), args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new IllegalArgumentException(String.format(
                     "Unknown action: %s.%s", name, ReflectionUtil.toString(action, args)
@@ -89,5 +94,17 @@ public class PolicyServer {
         } catch (InvocationTargetException e) {
             throw Throwables.propagate(e.getCause());
         }
+    }
+
+    /**
+     * Triggers an action upon a named component.
+     *
+     * @param name                          The name of the component on which to trigger the acton.
+     * @param action                        The name of the action to trigger.
+     * @param args                          Arguments to pass to the action.
+     * @throws IllegalArgumentException     If there is no action with the given name and argument types.
+     */
+    public void call(final String name, final String action, final Object... args) {
+        call(name, action, Void.class, args);
     }
 }
