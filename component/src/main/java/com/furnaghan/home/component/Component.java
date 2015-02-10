@@ -7,12 +7,18 @@ import com.google.common.collect.Lists;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class Component<T extends Component.Listener> {
 
     public static interface Listener {
+    }
+
+    public static Iterator<Component> load() {
+        return ServiceLoader.load(Component.class).iterator();
     }
 
     private final Collection<T> listeners;
