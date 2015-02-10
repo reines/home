@@ -8,6 +8,7 @@ import com.google.common.base.Throwables;
 import com.jamierf.evohome.EvohomeClient;
 import com.jamierf.evohome.model.Device;
 import com.jamierf.evohome.model.QuickAction;
+import com.jamierf.evohome.model.Temperature;
 import com.sun.jersey.api.client.Client;
 import io.dropwizard.client.JerseyClientConfiguration;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class EvohomeComponent extends Component<HeatingType.Listener> implements HeatingType {
     private static final Logger LOG = LoggerFactory.getLogger(EvohomeComponent.class);
@@ -49,12 +52,12 @@ public class EvohomeComponent extends Component<HeatingType.Listener> implements
         );
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
             try {
-                final Collection<Device> devices = client.getDevices();
+                final Collection<Device> devices = client.getDevices().values();
                 LOG.trace("Received readings for {} devices", devices.size());
 
                 devices.forEach((device) -> {
                     final String name = device.getName();
-                    final float value = device.getThermostat().getTemperature();
+                    final double value = device.getTemperature().toCelsius();
                     trigger((listener) -> listener.receive(name, value));
                 });
             } catch (RuntimeException e) {
@@ -82,9 +85,12 @@ public class EvohomeComponent extends Component<HeatingType.Listener> implements
     }
 
     @Override
-    public void setTemperature(final String zone, final float temperature) {
+    public void setTemperature(final String zone, final double temperature) {
         try {
-            client.setTemperature(zone, temperature, Optional.absent()).get();
+            final Optional<Device> device = client.getDevice(zone);
+            checkArgument(device.isPresent(), "Device not found");
+
+            client.setTemperature(device.get(), Temperature.celsius(temperature), Optional.absent()).get();
         } catch (InterruptedException | ExecutionException e) {
             throw Throwables.propagate(e);
         }

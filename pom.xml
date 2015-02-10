@@ -14,6 +14,8 @@
         <module>component-amp-onkyo</module>
         <module>component-calendar</module>
         <module>component-calendar-google</module>
+        <module>component-clock</module>
+        <module>component-clock-system</module>
         <module>component-email</module>
         <module>component-email-imap</module>
         <module>component-feed</module>
@@ -35,13 +37,15 @@
         <module>component-torrent-deluge</module>
         <module>component-tv</module>
         <module>component-tv-bravia</module>
+        <module>policy</module>
     </modules>
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <file.encoding>UTF-8</file.encoding>
 
         <dropwizard.version>0.7.1</dropwizard.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <licenses>
@@ -108,7 +112,7 @@
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
-                    <encoding>${file.encoding}</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -116,7 +120,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <encoding>${file.encoding}</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -162,6 +166,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

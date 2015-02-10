@@ -1,10 +1,12 @@
-package com.furnaghan.home.component.meter;
+package com.furnaghan.home.component.clock;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.ComponentType;
 
-public interface MeterType extends ComponentType {
+import java.util.Date;
+
+public interface ClockType extends ComponentType {
     public static interface Listener extends Component.Listener {
-        void receive(final String name, final double value);
+        void tick(final Date now);
     }
 }

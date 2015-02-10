@@ -10,5 +10,5 @@ public interface HeatingType extends MeterType {
 
     void turnOff();
 
-    void setTemperature(final String zone, final float temperature);
+    void setTemperature(final String zone, final double temperature);
 }
