@@ -2,7 +2,7 @@ package com.furnaghan.home.component.heating.evohome;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.heating.HeatingType;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.jamierf.evohome.EvohomeClient;

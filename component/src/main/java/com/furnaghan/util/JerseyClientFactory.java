@@ -1,4 +1,4 @@
-package com.furnaghan.home.component.util;
+package com.furnaghan.util;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;

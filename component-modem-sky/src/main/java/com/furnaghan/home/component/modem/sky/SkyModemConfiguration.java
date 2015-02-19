@@ -2,13 +2,14 @@ package com.furnaghan.home.component.modem.sky;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
-public class SkyModemConfiguration extends JerseyClientConfiguration {
+public class SkyModemConfiguration extends JerseyClientConfiguration implements Configuration {
     @NotNull
     @JsonProperty
     private final URI root;

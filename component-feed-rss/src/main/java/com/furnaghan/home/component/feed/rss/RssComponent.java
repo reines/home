@@ -3,7 +3,7 @@ package com.furnaghan.home.component.feed.rss;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.feed.FeedType;
 import com.furnaghan.home.component.feed.rss.client.RssClient;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

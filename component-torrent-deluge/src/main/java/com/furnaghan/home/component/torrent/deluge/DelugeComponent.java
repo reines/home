@@ -5,7 +5,7 @@ import com.furnaghan.home.component.torrent.TorrentType;
 import com.furnaghan.home.component.torrent.deluge.client.DelugeClient;
 import com.furnaghan.home.component.torrent.deluge.client.StateListener;
 import com.furnaghan.home.component.torrent.deluge.client.model.DelugeTorrent;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 
 import java.net.URI;
 

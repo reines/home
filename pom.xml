@@ -38,12 +38,15 @@
         <module>component-tv</module>
         <module>component-tv-bravia</module>
         <module>policy</module>
+        <module>registry</module>
+        <module>test-application</module>
     </modules>
 
     <properties>
         <jdk.version>1.8</jdk.version>
 
         <dropwizard.version>0.7.1</dropwizard.version>
+        <jackson.version>2.3.3</jackson.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

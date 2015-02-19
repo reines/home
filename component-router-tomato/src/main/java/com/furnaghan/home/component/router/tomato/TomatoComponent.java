@@ -5,7 +5,7 @@ import com.furnaghan.home.component.router.RouterType;
 import com.furnaghan.home.component.router.model.Interface;
 import com.furnaghan.home.component.router.model.MacAddress;
 import com.furnaghan.home.component.router.tomato.client.TomatoClient;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;

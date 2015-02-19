@@ -4,7 +4,7 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.modem.ModemType;
 import com.furnaghan.home.component.modem.model.LineStats;
 import com.furnaghan.home.component.modem.sky.client.SkyClient;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 
 public class SkyModemComponent extends Component<ModemType.Listener> implements ModemType {
     private final SkyClient client;

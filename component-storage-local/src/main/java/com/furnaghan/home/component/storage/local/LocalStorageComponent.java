@@ -13,12 +13,14 @@ import java.io.IOException;
 
 public class LocalStorageComponent extends Component<StorageType.Listener> implements StorageType {
 
+    private final File root;
+
     public LocalStorageComponent(final LocalStorageConfiguration configuration) {
-        /* no op */
+        root = configuration.getRoot();
     }
 
     private File getFile(final String path) {
-        return new File(path);
+        return new File(root, path);
     }
 
     @Override

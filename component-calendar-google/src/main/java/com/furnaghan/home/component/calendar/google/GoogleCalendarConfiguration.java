@@ -1,6 +1,7 @@
 package com.furnaghan.home.component.calendar.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import com.google.api.client.util.SecurityUtils;
 import com.google.common.base.Optional;
 import com.google.common.io.Files;
@@ -14,7 +15,7 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 
-public class GoogleCalendarConfiguration {
+public class GoogleCalendarConfiguration implements Configuration {
 
     private static final String DEFAULT_STORE_PASS = "notasecret";
     private static final String DEFAULT_KEY_ALIAS = "privatekey";

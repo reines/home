@@ -3,7 +3,7 @@ package com.furnaghan.home.component.printer.littleprinter;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.printer.PrinterType;
 import com.furnaghan.home.component.printer.littleprinter.client.PrinterClient;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 import com.google.common.html.HtmlEscapers;
 
 public class LittlePrinterComponent extends Component<PrinterType.Listener> implements PrinterType {

@@ -1,11 +1,11 @@
 package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
-import com.furnaghan.home.component.clock.system.SystemClockComponent;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,36 +13,44 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+import static com.furnaghan.home.component.Components.getName;
 import static com.furnaghan.home.policy.EventListener.proxy;
 import static com.furnaghan.util.ReflectionUtil.checkReturnType;
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PolicyServer {
+public class PolicyServer implements Managed {
 
     private static final Logger logger = LoggerFactory.getLogger( PolicyServer.class );
 
-    public static void main(String... args) {
-        final PolicyServer server = new PolicyServer();
-
-        server.register("test_clock", new SystemClockComponent());
-        server.call("test_clock", "testAction", "hello world");
-    }
-
     private final Map<String, Component<?>> components;
     private final List<EventListener> listeners;
+    private final PolicyManager policies;
 
     public PolicyServer() {
         components = Maps.newConcurrentMap();
         listeners = Lists.newCopyOnWriteArrayList();
+        policies = new PolicyManager();
 
         // Add a logging listener
         listeners.add(EventListener.logger(logger));
+
+        // Add a policy manager - triggers policies when appropriate
+        listeners.add(policies);
     }
 
-    protected Optional<Component<?>> getComponent(final String name) {
-        return Optional.ofNullable(components.get(name));
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    public void register(final Policy policy) {
+        policies.register(policy);
     }
 
     /**
@@ -59,8 +67,8 @@ public class PolicyServer {
             return false;
         }
 
-        final T listener = proxy(name, component.getListenerType(), EventListener.delegate(listeners));
-        logger.info("Registered {} as '{}'", component, name);
+        final T listener = proxy(component, name, EventListener.delegate(listeners));
+        logger.info("Registered {} '{}'", getName(component), name);
         component.addListener(listener);
         return true;
     }
@@ -76,17 +84,17 @@ public class PolicyServer {
      */
     @SuppressWarnings("unchecked")
     public <T> T call(final String name, final String action, final Class<T> resultType, final Object... args) {
-        final Optional<Component<?>> component = getComponent(name);
-        checkArgument(component.isPresent(), "Unknown component: " + name);
+        final Component<?> component = components.get(name);
+        checkNotNull(component, "Unknown component: " + name);
 
-        final Class<?> type = component.get().getClass();
+        final Class<?> type = component.getClass();
         final Class<?>[] argTypes = ReflectionUtil.getTypes(args);
 
         try {
             final Method method = type.getMethod(action, argTypes);
             checkReturnType(method, resultType);
 
-            return (T) method.invoke(component.get(), args);
+            return (T) method.invoke(component, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new IllegalArgumentException(String.format(
                     "Unknown action: %s.%s", name, ReflectionUtil.toString(action, args)

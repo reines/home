@@ -2,12 +2,13 @@ package com.furnaghan.home.component.storage.sftp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import com.google.common.net.HostAndPort;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-public class SftpStorageConfiguration {
+public class SftpStorageConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty

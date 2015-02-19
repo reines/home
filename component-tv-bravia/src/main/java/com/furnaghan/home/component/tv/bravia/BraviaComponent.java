@@ -3,7 +3,7 @@ package com.furnaghan.home.component.tv.bravia;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.tv.TvType;
 import com.furnaghan.home.component.tv.model.Source;
-import com.furnaghan.home.component.util.JerseyClientFactory;
+import com.furnaghan.util.JerseyClientFactory;
 import com.google.common.collect.ImmutableMap;
 import com.jamierf.sony.bravia.client.BraviaClient;
 import com.jamierf.sony.bravia.client.model.Command;

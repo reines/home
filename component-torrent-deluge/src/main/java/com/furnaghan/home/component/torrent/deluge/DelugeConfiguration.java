@@ -2,13 +2,14 @@ package com.furnaghan.home.component.torrent.deluge;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.util.Duration;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
-public class DelugeConfiguration extends JerseyClientConfiguration {
+public class DelugeConfiguration extends JerseyClientConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty

@@ -2,13 +2,14 @@ package com.furnaghan.home.component.printer.littleprinter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
-public class LittlePrinterConfiguration extends JerseyClientConfiguration {
+public class LittlePrinterConfiguration extends JerseyClientConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty

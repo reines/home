@@ -1,13 +1,14 @@
 package com.furnaghan.home.component.heating.evohome;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.util.Duration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-public class EvohomeConfiguration extends JerseyClientConfiguration {
+public class EvohomeConfiguration extends JerseyClientConfiguration implements Configuration {
 
     @NotEmpty
     @JsonProperty

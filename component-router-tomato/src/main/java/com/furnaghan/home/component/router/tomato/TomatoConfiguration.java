@@ -2,6 +2,7 @@ package com.furnaghan.home.component.router.tomato;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.util.Duration;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -9,7 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
-public class TomatoConfiguration extends JerseyClientConfiguration {
+public class TomatoConfiguration extends JerseyClientConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty
