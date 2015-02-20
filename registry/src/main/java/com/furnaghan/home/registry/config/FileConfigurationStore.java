@@ -12,6 +12,7 @@ import io.dropwizard.jackson.Jackson;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.furnaghan.home.component.Components.getConfigurationType;
@@ -60,6 +61,10 @@ public class FileConfigurationStore implements ConfigurationStore {
         final ImmutableMap.Builder<String, Optional<Configuration>> result = ImmutableMap.builder();
 
         final File typeDir = typeDir(componentType);
+        if (!typeDir.isDirectory()) {
+            return Collections.emptyMap();
+        }
+
         try {
             Files.list(typeDir.toPath()).forEach(path -> {
                 final File file = path.toFile();

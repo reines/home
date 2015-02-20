@@ -5,19 +5,21 @@ import com.furnaghan.home.component.ComponentType;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.registry.config.ConfigurationStore;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import io.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import static com.furnaghan.home.component.Components.getName;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ComponentRegistry implements Managed {
 
@@ -25,13 +27,22 @@ public class ComponentRegistry implements Managed {
 
     private final ConfigurationStore configurationStore;
     private final Collection<ComponentListener> listeners;
-    private final Map<String, Component<?>> components;
+    private final Map<String, Component<?>> componentsByName;
+    private final Multimap<Class<? extends ComponentType>, Component<?>> componentsByType;
 
-    public ComponentRegistry(ConfigurationStore configurationStore) {
+    public ComponentRegistry(final ConfigurationStore configurationStore) {
         this.configurationStore = configurationStore;
 
         listeners = Lists.newCopyOnWriteArrayList();
-        components = Maps.newConcurrentMap();
+        componentsByName = Maps.newHashMap();
+        componentsByType = HashMultimap.create();
+
+        listeners.add((name, component) -> {
+            componentsByName.put(name, component);
+
+            final Set<Class<ComponentType>> types = Components.getComponentTypes(component.getClass());
+            types.forEach(type -> componentsByType.put(type, component));
+        });
     }
 
     public void addListener(final ComponentListener listener) {
@@ -49,11 +60,29 @@ public class ComponentRegistry implements Managed {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ComponentType> Optional<T> getComponent(final String name) {
-        return Optional.fromNullable((T)components.get(name));
+    public synchronized <T extends ComponentType> Collection<T> getComponents(final Class<T> type) {
+        checkNotNull(type, "Component type cannot be null");
+        return Collections2.transform(componentsByType.get(type), new Function<Component<?>, T>() {
+            @Nullable
+            @Override
+            public T apply(final Component<?> input) {
+                return (T) input;
+            }
+        });
     }
 
-    private void load(final Class<Component> componentType) {
+    @SuppressWarnings("unchecked")
+    public synchronized <T extends ComponentType> Optional<T> getComponent(final String name) {
+        checkNotNull(name, "Component name cannot be null");
+        return Optional.fromNullable((T) componentsByName.get(name));
+    }
+
+    public synchronized int size() {
+        return componentsByName.size();
+    }
+
+    public void load(final Class<? extends Component> componentType) {
+        checkNotNull(componentType, "Component type cannot be null");
         final Map<String, Optional<Configuration>> configurations = configurationStore.load(componentType);
         for (final Map.Entry<String, Optional<Configuration>> entry : configurations.entrySet()) {
             final String name = entry.getKey();
@@ -62,13 +91,12 @@ public class ComponentRegistry implements Managed {
         }
     }
 
-    private void load(final Class<Component> componentType, final String name, final Optional<Configuration> configuration) {
+    private synchronized void load(final Class<? extends Component> componentType, final String name, final Optional<Configuration> configuration) {
         logger.debug("Loading {} '{}'", getName(componentType), name);
 
         try {
             final Component<?> component = Components.create(componentType, configuration);
             logger.info("Loaded {} '{}'", getName(componentType), name);
-            components.put(name, component);
             listeners.forEach(l -> l.onComponentLoaded(name, component));
         }
         catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
