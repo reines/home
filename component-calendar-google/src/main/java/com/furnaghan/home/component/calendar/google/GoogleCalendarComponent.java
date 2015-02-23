@@ -4,7 +4,6 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.calendar.CalendarType;
 import com.furnaghan.home.component.calendar.google.event.EventSink;
 import com.furnaghan.home.component.calendar.google.event.SchedulingEventSink;
-import com.furnaghan.home.component.calendar.model.CalendarEvent;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
@@ -57,15 +56,11 @@ public class GoogleCalendarComponent extends Component<CalendarType.Listener> im
             final EventSink eventSink = new SchedulingEventSink(client, calendarId, new SchedulingEventSink.Callback() {
                 @Override
                 public void notify(final String id, final long start, final long end, final String summary, final String description) {
-                    final CalendarEvent event = new CalendarEvent(
-                            new Date(start),
-                            Duration.milliseconds(end - start),
-                            summary,
-                            Optional.fromNullable(description)
-                    );
+                    final Date date = new Date(start);
+                    final Duration duration = Duration.milliseconds(end - start);
 
                     LOG.info("Triggering {}", id);
-                    trigger((listener) -> listener.notify(event));
+                    trigger((listener) -> listener.notify(date, duration, summary, Optional.fromNullable(description)));
                 }
             });
 
@@ -90,13 +85,13 @@ public class GoogleCalendarComponent extends Component<CalendarType.Listener> im
     }
 
     @Override
-    public void addEvent(final CalendarEvent event) {
+    public void addEvent(final Date start, final Duration duration, final String title, final Optional<String> description) {
         try {
             client.events().insert(calendarId, new Event()
-                    .setSummary(event.getTitle())
-                    .setDescription(event.getDescription().orNull())
-                    .setStart(new EventDateTime().setDateTime(new DateTime(event.getStart())))
-                    .setEnd(new EventDateTime().setDateTime(new DateTime(event.getEnd()))))
+                    .setSummary(title)
+                    .setDescription(description.orNull())
+                    .setStart(new EventDateTime().setDateTime(new DateTime(start)))
+                    .setEnd(new EventDateTime().setDateTime(new DateTime(start.getTime() + duration.toMilliseconds()))))
                     .execute();
         } catch (IOException e) {
             throw Throwables.propagate(e);

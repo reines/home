@@ -32,5 +32,20 @@
             <artifactId>component-storage-local</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-meter-currentcost</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-heating-evohome</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-calendar-google</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

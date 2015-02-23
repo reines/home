@@ -2,6 +2,7 @@ package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
+import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -16,12 +17,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 public class PolicyManager implements EventListener {
 
     private static final Logger logger = LoggerFactory.getLogger( PolicyManager.class );
 
     private final Multimap<Method, Policy> triggers = HashMultimap.create();
+    private final ComponentRegistry registry;
+    private final ExecutorService executor;
+
+    public PolicyManager(final ComponentRegistry registry, final ExecutorService executor) {
+        this.registry = registry;
+        this.executor = executor;
+    }
 
     public void register(final Policy policy) {
         final Set<Class<Component.Listener>> listenerTypes = ReflectionUtil.getAssignableTypes(
@@ -62,12 +71,21 @@ public class PolicyManager implements EventListener {
         for (final Policy policy : getAffectedPolicies(component, event, parameterTypes)) {
             try {
                 final Method method = policy.getClass().getMethod(event, parameterTypes);
-                method.invoke(policy, args);
+                executor.submit(() -> trigger(name, component, policy, method, args));
             } catch (NoSuchMethodException e) {
-                    /* unused: no such method is fine - just don't trigger this policy */
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                logger.warn("Failed to call {} on policy", ReflectionUtil.toString(event, args), e);
+                /* unused: no such method is fine - just don't trigger this policy */
             }
+        }
+    }
+
+    private void trigger(final String name, final Component<?> component, final Policy policy, final Method method, final Object... args) {
+        Context.set(name, component, registry);
+        try {
+            method.invoke(policy, args);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            logger.warn("Failed to call {} on policy", ReflectionUtil.toString(method.getName(), args), e);
+        } finally {
+            Context.clear();
         }
     }
 }

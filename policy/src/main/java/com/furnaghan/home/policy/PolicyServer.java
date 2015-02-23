@@ -1,6 +1,7 @@
 package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
+import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import static com.furnaghan.home.component.Components.getName;
 import static com.furnaghan.home.policy.EventListener.proxy;
@@ -27,16 +29,18 @@ public class PolicyServer implements Managed {
     private final List<EventListener> listeners;
     private final PolicyManager policies;
 
-    public PolicyServer() {
+    public PolicyServer(final ComponentRegistry registry, final ExecutorService executor) {
         components = Maps.newConcurrentMap();
         listeners = Lists.newCopyOnWriteArrayList();
-        policies = new PolicyManager();
+        policies = new PolicyManager(registry, executor);
 
         // Add a logging listener
         listeners.add(EventListener.logger(logger));
 
         // Add a policy manager - triggers policies when appropriate
         listeners.add(policies);
+
+        registry.addListener(this::register);
     }
 
     @Override

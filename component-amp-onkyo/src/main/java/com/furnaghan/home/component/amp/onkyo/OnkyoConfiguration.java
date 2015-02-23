@@ -15,7 +15,7 @@ public class OnkyoConfiguration implements Configuration {
 
     @JsonCreator
     public OnkyoConfiguration(
-            @JsonProperty("address") HostAndPort address) {
+            @JsonProperty("address") final HostAndPort address) {
         this.address = address;
     }
 
