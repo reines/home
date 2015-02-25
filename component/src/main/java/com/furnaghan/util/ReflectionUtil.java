@@ -78,9 +78,29 @@ public final class ReflectionUtil {
     @SuppressWarnings("unchecked")
     public static <U> Set<Class<U>> getAssignableTypes(final Type[] types, final Class<?> from) {
         final ImmutableSet.Builder<Class<U>> result = ImmutableSet.builder();
-        for (Type type : types) {
+        for (final Type type : types) {
+            if (from.equals(type)) {
+                continue;
+            }
+
+            // This class inherits from the desired type
             if (from.isAssignableFrom((Class<?>) type)) {
-                result.add((Class<U>) type);
+                final Class<U> target = (Class<U>) type;
+
+                // Add this class
+                result.add(target);
+
+                // Add any superclass
+                final Type superclasses = target.getGenericSuperclass();
+                if (superclasses != null) {
+                    result.addAll(getAssignableTypes(new Type[]{superclasses}, from));
+                }
+
+                // Add any interfaces
+                final Type[] interfaces = target.getGenericInterfaces();
+                if (interfaces.length > 0) {
+                    result.addAll(getAssignableTypes(interfaces, from));
+                }
             }
         }
         return result.build();

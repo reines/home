@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+// Works through the API, though would be nice to use: https://github.com/domoticz/domoticz/blob/master/hardware/evohome.cpp
 public class EvohomeComponent extends Component<HeatingType.Listener> implements HeatingType {
     private static final Logger LOG = LoggerFactory.getLogger(EvohomeComponent.class);
 

@@ -100,7 +100,7 @@ public class ComponentRegistry implements Managed {
             listeners.forEach(l -> l.onComponentLoaded(name, component));
         }
         catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            logger.error(String.format("Unable to load %s '%s' ", getName(componentType), name), e);
+            logger.error(String.format("Unable to load %s '%s' ", getName(componentType), name), e.getCause());
         }
     }
 }

@@ -22,11 +22,5 @@
             <artifactId>registry</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <!-- for testing -->
-            <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-clock-system</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>
