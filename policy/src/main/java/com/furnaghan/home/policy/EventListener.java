@@ -3,17 +3,20 @@ package com.furnaghan.home.policy;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.util.ReflectionUtil;
+import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Proxy;
 import java.util.Collection;
 
 public interface EventListener {
 
-    @SuppressWarnings("unchecked")
     public static <T extends Component.Listener> T proxy(final Component<?> component, final String name, final EventListener listener) {
-        final Class<? extends Component.Listener> type = Components.getListenerType(component.getClass());
-        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, (proxy, method, args) -> {
+        final Class<T> type = Iterables.getFirst(Components.getListenerTypes(component.getClass()), null);
+        if (type == null) {
+            throw new IllegalStateException("Component has no listener");
+        }
+
+        return ReflectionUtil.proxy(type, (proxy, method, args) -> {
             final String event = method.getName();
             listener.onEvent(component, name, event, args);
 

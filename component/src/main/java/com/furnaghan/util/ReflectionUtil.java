@@ -7,12 +7,10 @@ import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang.reflect.MethodUtils;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,6 +21,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class ReflectionUtil {
 
     private static final Joiner ARG_JOINER = Joiner.on(", ");
+
+    @SuppressWarnings("unchecked")
+    public static <T> T proxy(final Class<T> type, InvocationHandler handler) {
+        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, handler);
+    }
 
     public static <T> Function<String, Class<T>> classLoader(final ClassLoader loader) {
         return new Function<String, Class<T>>() {
@@ -104,6 +107,10 @@ public final class ReflectionUtil {
             }
         }
         return result.build();
+    }
+
+    public static Optional<Method> getMethod(final Class<?> type, final String name, final Class<?>[] parameterTypes) {
+        return Optional.fromNullable(MethodUtils.getMatchingAccessibleMethod(type, name, parameterTypes));
     }
 
     public static <T> Set<Method> getMethods(final Collection<Class<T>> types) {

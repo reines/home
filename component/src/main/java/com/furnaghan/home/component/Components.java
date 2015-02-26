@@ -30,11 +30,6 @@ public final class Components {
         return ReflectionUtil.getAssignableTypes(types, Component.Listener.class);
     }
 
-    public static <T extends Component.Listener> Class<T> getListenerType(final Class<? extends Component> component) {
-        final Type[] types = ((ParameterizedType) component.getGenericSuperclass()).getActualTypeArguments();
-        return Iterables.getOnlyElement(ReflectionUtil.getAssignableTypes(types, Component.Listener.class));
-    }
-
     public static <T extends Configuration> Optional<Class<T>> getConfigurationType(final Class<? extends Component> component) {
         for (final Constructor<?> constructor : component.getConstructors()) {
             final Set<Class<T>> configurationTypes = ReflectionUtil.getAssignableTypes(

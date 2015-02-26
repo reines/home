@@ -5,6 +5,7 @@ import com.furnaghan.home.component.Components;
 import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -23,7 +24,7 @@ public class PolicyManager implements EventListener {
 
     private static final Logger logger = LoggerFactory.getLogger( PolicyManager.class );
 
-    private final Multimap<Method, Policy> triggers = HashMultimap.create();
+    private final Multimap<Method, Policy> triggers = HashMultimap.create(); // TODO: thread safety?
     private final ComponentRegistry registry;
     private final ExecutorService executor;
 
@@ -46,11 +47,9 @@ public class PolicyManager implements EventListener {
 
         final Set<Method> methods = Sets.newHashSet();
         listenerTypes.forEach(type -> {
-            try {
-                final Method method = type.getMethod(event, parameterTypes);
-                methods.add(method);
-            } catch (NoSuchMethodException e) {
-                /* unused: no such method is fine - just don't trigger this policy */
+            final Optional<Method> method = ReflectionUtil.getMethod(type, event, parameterTypes);
+            if (method.isPresent()) {
+                methods.add(method.get());
             }
         });
 
@@ -69,11 +68,9 @@ public class PolicyManager implements EventListener {
     public void onEvent(final Component<?> component, final String name, final String event, final Object... args) {
         final Class<?>[] parameterTypes = ReflectionUtil.getTypes(args);
         for (final Policy policy : getAffectedPolicies(component, event, parameterTypes)) {
-            try {
-                final Method method = policy.getClass().getMethod(event, parameterTypes);
-                executor.submit(() -> trigger(name, component, policy, method, args));
-            } catch (NoSuchMethodException e) {
-                /* unused: no such method is fine - just don't trigger this policy */
+            final Optional<Method> method = ReflectionUtil.getMethod(policy.getClass(), event, parameterTypes);
+            if (method.isPresent()) {
+                executor.submit(() -> trigger(name, component, policy, method.get(), args));
             }
         }
     }

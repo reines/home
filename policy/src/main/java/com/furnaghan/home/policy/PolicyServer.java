@@ -3,6 +3,7 @@ package com.furnaghan.home.policy;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.util.ReflectionUtil;
+import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,7 +19,6 @@ import java.util.concurrent.ExecutorService;
 
 import static com.furnaghan.home.component.Components.getName;
 import static com.furnaghan.home.policy.EventListener.proxy;
-import static com.furnaghan.util.ReflectionUtil.checkReturnType;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PolicyServer implements Managed {
@@ -86,22 +86,25 @@ public class PolicyServer implements Managed {
      * @param args                          Arguments to pass to the action.
      * @throws IllegalArgumentException     If there is no action with the given name and argument types.
      */
-    @SuppressWarnings("unchecked")
     public <T> T call(final String name, final String action, final Class<T> resultType, final Object... args) {
         final Component<?> component = components.get(name);
         checkNotNull(component, "Unknown component: " + name);
 
         final Class<?> type = component.getClass();
-        final Class<?>[] argTypes = ReflectionUtil.getTypes(args);
+        final Class<?>[] parameterTypes = ReflectionUtil.getTypes(args);
 
         try {
-            final Method method = type.getMethod(action, argTypes);
-            checkReturnType(method, resultType);
+            final Optional<Method> method = ReflectionUtil.getMethod(type, action, parameterTypes);
+            if (!method.isPresent()) {
+                throw new IllegalArgumentException(String.format(
+                        "Unable to find method: %s.%s", name, ReflectionUtil.toString(action, args)
+                ));
+            }
 
-            return (T) method.invoke(component, args);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
+            return resultType.cast(method.get().invoke(component, args));
+        } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(String.format(
-                    "Unknown action: %s.%s", name, ReflectionUtil.toString(action, args)
+                    "Attempted to call inaccessible method: %s.%s", name, ReflectionUtil.toString(action, args)
             ));
         } catch (InvocationTargetException e) {
             throw Throwables.propagate(e.getCause());
