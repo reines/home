@@ -35,6 +35,12 @@ public class FileConfigurationStore implements ConfigurationStore {
         checkArgument(dir.isDirectory() || dir.mkdirs(), "Unable to create configuration directory: " + dir.getAbsolutePath());
     }
 
+    @Override
+    public void start() {}
+
+    @Override
+    public void stop() { }
+
     private File typeDir(final Class<? extends Component> type) {
         return new File(dir, getName(type));
     }

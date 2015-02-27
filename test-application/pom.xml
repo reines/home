@@ -24,12 +24,22 @@
         </dependency>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
+            <artifactId>policy-script-groovy</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
             <artifactId>component-meter-currentcost</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
             <artifactId>component-heating-evohome</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>component-clock-system</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

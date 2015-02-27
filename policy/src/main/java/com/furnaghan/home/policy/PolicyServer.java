@@ -1,7 +1,7 @@
 package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
-import com.furnaghan.home.registry.ComponentRegistry;
+import com.furnaghan.home.script.Script;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -29,32 +29,26 @@ public class PolicyServer implements Managed {
     private final List<EventListener> listeners;
     private final PolicyManager policies;
 
-    public PolicyServer(final ComponentRegistry registry, final ExecutorService executor) {
+    public PolicyServer(final ExecutorService executor) {
         components = Maps.newConcurrentMap();
         listeners = Lists.newCopyOnWriteArrayList();
-        policies = new PolicyManager(registry, executor);
+        policies = new PolicyManager(executor);
 
         // Add a logging listener
         listeners.add(EventListener.logger(logger));
 
         // Add a policy manager - triggers policies when appropriate
         listeners.add(policies);
-
-        registry.addListener(this::register);
     }
 
     @Override
-    public void start() {
-
-    }
+    public void start() { }
 
     @Override
-    public void stop() {
+    public void stop() { }
 
-    }
-
-    public void register(final Policy policy) {
-        policies.register(policy);
+    public boolean register(final Class<? extends Component.Listener> type, final String event, final Class<?>[] parameterTypes, final Script script) {
+        return policies.register(type, event, parameterTypes, script);
     }
 
     /**

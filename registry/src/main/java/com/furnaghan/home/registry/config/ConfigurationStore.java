@@ -3,10 +3,11 @@ package com.furnaghan.home.registry.config;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.google.common.base.Optional;
+import io.dropwizard.lifecycle.Managed;
 
 import java.util.Map;
 
-public interface ConfigurationStore {
+public interface ConfigurationStore extends Managed {
     void save(final Class<? extends Component> type, final String name, final Optional<Configuration> configuration);
     Map<String, Optional<Configuration>> load(final Class<? extends Component> type);
 }

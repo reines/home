@@ -55,18 +55,18 @@ public class ComponentRegistryTest {
 
     @Test(expected = NullPointerException.class)
     public void testGetByNullName() {
-        registry.getComponent(null);
+        registry.getRegisteredComponent(null);
     }
 
     @Test
     public void testGetByEmptyName() {
-        final Optional<ComponentType> result = registry.getComponent("");
+        final Optional<ComponentType> result = registry.getRegisteredComponent("");
         assertThat(result.isPresent(), is(false));
     }
 
     @Test(expected = NullPointerException.class)
     public void testGetByNullType() {
-        registry.getComponents(null);
+        registry.getRegisteredComponents(null);
     }
 
     @Test
@@ -77,41 +77,41 @@ public class ComponentRegistryTest {
 
     @Test
     public void testNoComponentReturnsAbsent() {
-        final Optional<ComponentType> result = registry.getComponent("bananas");
+        final Optional<ComponentType> result = registry.getRegisteredComponent("bananas");
         assertThat(result.isPresent(), is(false));
     }
 
     @Test
     public void testUnknownComponentReturnsAbsent() {
         registry.load(TestComponent.class);
-        final Optional<ComponentType> result = registry.getComponent("bananas");
+        final Optional<ComponentType> result = registry.getRegisteredComponent("bananas");
         assertThat(result.isPresent(), is(false));
     }
 
     @Test
     public void testComponentReturnedByName() {
         registry.load(TestComponent.class);
-        final Optional<ComponentType> result = registry.getComponent("test1");
+        final Optional<ComponentType> result = registry.getRegisteredComponent("test1");
         assertThat(result.isPresent(), is(true));
     }
 
     @Test
     public void testNoComponentReturnsEmptyCollection() {
-        final Collection<TestType> result = registry.getComponents(TestType.class);
+        final Collection<TestType> result = registry.getRegisteredComponents(TestType.class);
         assertThat(result, is(empty()));
     }
 
     @Test
     public void testUnknownComponentReturnsEmptyCollection() {
         registry.load(TestComponent.class);
-        final Collection<UnusedTestType> result = registry.getComponents(UnusedTestType.class);
+        final Collection<UnusedTestType> result = registry.getRegisteredComponents(UnusedTestType.class);
         assertThat(result, is(empty()));
     }
 
     @Test
     public void testComponentReturnsCollectionByType() {
         registry.load(TestComponent.class);
-        final Collection<TestType> result = registry.getComponents(TestType.class);
+        final Collection<TestType> result = registry.getRegisteredComponents(TestType.class);
         assertThat(result.size(), is(2));
     }
 }

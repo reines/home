@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,22 +28,25 @@ public class ComponentRegistry implements Managed {
 
     private final ConfigurationStore configurationStore;
     private final Collection<ComponentListener> listeners;
-    private final Map<String, Component<?>> componentsByName;
-    private final Multimap<Class<? extends ComponentType>, Component<?>> componentsByType;
+    private final Map<String, Component<?>> registeredComponentsByName;
+    private final Multimap<Class<? extends ComponentType>, Component<?>> registeredComponentsByType;
+    private final Collection<Class<Component>> components;
 
     public ComponentRegistry(final ConfigurationStore configurationStore) {
         this.configurationStore = configurationStore;
 
         listeners = Lists.newCopyOnWriteArrayList();
-        componentsByName = Maps.newHashMap();
-        componentsByType = HashMultimap.create();
+        registeredComponentsByName = Maps.newConcurrentMap();
+        registeredComponentsByType = HashMultimap.create();
 
         listeners.add((name, component) -> {
-            componentsByName.put(name, component);
+            registeredComponentsByName.put(name, component);
 
             final Set<Class<ComponentType>> types = Components.getComponentTypes(component.getClass());
-            types.forEach(type -> componentsByType.put(type, component));
+            types.forEach(type -> registeredComponentsByType.put(type, component));
         });
+
+        components = ServiceDiscovery.discoverServices(Component.class);
     }
 
     public void addListener(final ComponentListener listener) {
@@ -51,18 +55,24 @@ public class ComponentRegistry implements Managed {
 
     @Override
     public void start() {
-        ServiceDiscovery.discoverServices(Component.class).forEach(this::load);
+        components.forEach(this::load);
     }
 
     @Override
-    public void stop() {
+    public void stop() { }
 
+    public Collection<Class<Component>> getComponents() {
+        return Collections.unmodifiableCollection(components);
+    }
+
+    public Map<String, Component<?>> getRegisteredComponents() {
+        return Collections.unmodifiableMap(registeredComponentsByName);
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized <T extends ComponentType> Collection<T> getComponents(final Class<T> type) {
+    public synchronized <T extends ComponentType> Collection<T> getRegisteredComponents(final Class<T> type) {
         checkNotNull(type, "Component type cannot be null");
-        return Collections2.transform(componentsByType.get(type), new Function<Component<?>, T>() {
+        return Collections2.transform(registeredComponentsByType.get(type), new Function<Component<?>, T>() {
             @Nullable
             @Override
             public T apply(final Component<?> input) {
@@ -72,13 +82,13 @@ public class ComponentRegistry implements Managed {
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized <T extends ComponentType> Optional<T> getComponent(final String name) {
+    public synchronized <T extends ComponentType> Optional<T> getRegisteredComponent(final String name) {
         checkNotNull(name, "Component name cannot be null");
-        return Optional.fromNullable((T) componentsByName.get(name));
+        return Optional.fromNullable((T) registeredComponentsByName.get(name));
     }
 
     public synchronized int size() {
-        return componentsByName.size();
+        return registeredComponentsByName.size();
     }
 
     public void load(final Class<? extends Component> componentType) {

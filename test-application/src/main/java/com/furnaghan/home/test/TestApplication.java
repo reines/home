@@ -1,45 +1,58 @@
 package com.furnaghan.home.test;
 
-import com.codahale.metrics.MetricRegistry;
-import com.furnaghan.home.component.heating.evohome.EvohomeComponent;
-import com.furnaghan.home.component.heating.evohome.EvohomeConfiguration;
-import com.furnaghan.home.component.meter.currentcost.CurrentcostComponent;
-import com.furnaghan.home.component.meter.currentcost.CurrentcostConfiguration;
+import com.furnaghan.home.component.clock.ClockType;
+import com.furnaghan.home.component.clock.system.SystemClockComponent;
+import com.furnaghan.home.component.clock.system.SystemClockConfiguration;
+import com.furnaghan.home.policy.Context;
 import com.furnaghan.home.policy.PolicyServer;
 import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.home.registry.config.ConfigurationStore;
 import com.furnaghan.home.registry.config.FileConfigurationStore;
-import com.furnaghan.home.test.policy.MeterLoggingPolicy;
+import com.furnaghan.home.script.ScriptFactory;
+import com.furnaghan.home.script.groovy.GroovyScriptFactory;
+import com.furnaghan.home.script.nashorn.NashornScriptFactory;
+import com.furnaghan.home.test.config.TestApplicationConfiguration;
+import com.furnaghan.home.test.resources.ComponentResource;
 import com.google.common.base.Optional;
-import io.dropwizard.metrics.Slf4jReporterFactory;
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Duration;
 
+import java.util.Date;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-public class TestApplication {
+public class TestApplication extends Application<TestApplicationConfiguration> {
 
-    public static void main(final String... args) {
+    public static void main(String... args) throws Exception {
+        new TestApplication().run(args);
+    }
+
+    @Override
+    public void initialize(final Bootstrap<TestApplicationConfiguration> bootstrap) { }
+
+    @Override
+    public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
         final ConfigurationStore configurationStore = new FileConfigurationStore("/tmp/home-config");
-        final ComponentRegistry registry = new ComponentRegistry(configurationStore);
-        final PolicyServer policyServer = new PolicyServer(registry, Executors.newCachedThreadPool());
+        environment.lifecycle().manage(configurationStore);
 
-        // Evohome
-        final EvohomeConfiguration evohomeConfiguration = new EvohomeConfiguration("user", "pass", Duration.seconds(10));
-        evohomeConfiguration.setConnectionTimeout(Duration.seconds(5));
-        evohomeConfiguration.setTimeout(Duration.seconds(5));
-        configurationStore.save(EvohomeComponent.class, "heating", Optional.of(evohomeConfiguration));
+        configurationStore.save(SystemClockComponent.class, "test", Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
 
-        // Currentcost
-        configurationStore.save(CurrentcostComponent.class, "electricity", Optional.of(new CurrentcostConfiguration("/dev/ttyUSB0")));
+        final ComponentRegistry components = new ComponentRegistry(configurationStore);
+        environment.lifecycle().manage(components);
 
-        final MetricRegistry metrics = new MetricRegistry();
-        new Slf4jReporterFactory().build(metrics).start(5, TimeUnit.SECONDS);
+        final PolicyServer policyServer = new PolicyServer(Executors.newCachedThreadPool());
+        environment.lifecycle().manage(policyServer);
 
-        // Meter logging
-        policyServer.register(new MeterLoggingPolicy(metrics));
+        components.addListener(policyServer::register);
 
-        policyServer.start();
-        registry.start();
+        environment.jersey().register(new ComponentResource(components));
+
+        final ScriptFactory scriptFactory = new NashornScriptFactory();
+        scriptFactory.setVariable("context", Context::get);
+
+        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
+                scriptFactory.load(TestApplication.class.getResource("/scripts/test.js"))
+        );
     }
 }

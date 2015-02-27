@@ -1,0 +1,1 @@
+print('Hello world: ' + java.util.Arrays.toString(args));

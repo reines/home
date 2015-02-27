@@ -42,6 +42,10 @@ public final class ReflectionUtil {
         };
     }
 
+    public static InvocationHandler methodInvocationHandler(final Method target, final InvocationHandler delegate) {
+        return (proxy, method, args) -> target.equals(method) ? delegate.invoke(proxy, method, args) : null;
+    }
+
     public static <T> TypeReference<T> createTypeReference(final Class<T> type, final Class<?>... parameterTypes) {
         return new TypeReference<T>() {
             @Override
