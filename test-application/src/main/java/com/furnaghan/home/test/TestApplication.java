@@ -8,9 +8,8 @@ import com.furnaghan.home.policy.PolicyServer;
 import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.home.registry.config.ConfigurationStore;
 import com.furnaghan.home.registry.config.FileConfigurationStore;
+import com.furnaghan.home.script.JavaxScriptFactory;
 import com.furnaghan.home.script.ScriptFactory;
-import com.furnaghan.home.script.groovy.GroovyScriptFactory;
-import com.furnaghan.home.script.nashorn.NashornScriptFactory;
 import com.furnaghan.home.test.config.TestApplicationConfiguration;
 import com.furnaghan.home.test.resources.ComponentResource;
 import com.google.common.base.Optional;
@@ -48,9 +47,15 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
 
         environment.jersey().register(new ComponentResource(components));
 
-        final ScriptFactory scriptFactory = new NashornScriptFactory();
+        final ScriptFactory scriptFactory = new JavaxScriptFactory();
         scriptFactory.setVariable("context", Context::get);
 
+        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
+                scriptFactory.load(TestApplication.class.getResource("/scripts/test.py"))
+        );
+        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
+                scriptFactory.load(TestApplication.class.getResource("/scripts/test.groovy"))
+        );
         policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
                 scriptFactory.load(TestApplication.class.getResource("/scripts/test.js"))
         );

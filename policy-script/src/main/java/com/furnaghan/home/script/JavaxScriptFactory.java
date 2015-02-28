@@ -9,19 +9,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class JavaxScriptFactory extends ScriptFactory {
 
-    private final ScriptEngine engine;
+    private final ScriptEngineManager manager;
 
-    public JavaxScriptFactory(final String type) {
-        engine = new ScriptEngineManager().getEngineByName(type);
-        checkArgument(engine != null, "Unable to find script engine: " + type);
-    }
-
-    protected ScriptEngine getEngine() {
-        return engine;
+    public JavaxScriptFactory() {
+        manager = new ScriptEngineManager();
     }
 
     @Override
-    public JavaxScript load(final CharSource script) {
-        return new JavaxScript(this, script);
+    public JavaxScript load(final CharSource script, final String type) {
+        final ScriptEngine engine = manager.getEngineByExtension(type);
+        checkArgument(engine != null, "Unable to find script engine: " + type);
+        return new JavaxScript(this, engine, script);
     }
 }

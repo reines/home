@@ -36,12 +36,14 @@ public abstract class ScriptFactory {
     }
 
     public Script load(final URL resource) {
-        return load(Resources.asCharSource(resource, StandardCharsets.UTF_8));
+        final String type = Files.getFileExtension(resource.getFile());
+        return load(Resources.asCharSource(resource, StandardCharsets.UTF_8), type);
     }
 
     public Script load(final File file) {
-        return load(Files.asCharSource(file, StandardCharsets.UTF_8));
+        final String type = Files.getFileExtension(file.getName());
+        return load(Files.asCharSource(file, StandardCharsets.UTF_8), type);
     }
 
-    public abstract Script load(final CharSource script);
+    public abstract Script load(final CharSource script, final String type);
 }

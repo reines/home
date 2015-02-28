@@ -1,1 +1,1 @@
-print('Hello world: ' + java.util.Arrays.toString(args));
+print('Hello nashorn: ' + java.util.Arrays.toString(args));
