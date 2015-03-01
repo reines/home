@@ -2,6 +2,7 @@ package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
+import com.furnaghan.home.script.ParameterMap;
 import com.furnaghan.home.script.Script;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Function;
@@ -29,13 +30,13 @@ public class PolicyManager implements EventListener {
         this.executor = executor;
     }
 
-    public boolean register(final Class<? extends Component.Listener> listenerType, final String event, final Class<?>[] parameterTypes, final Script script) {
-        final Optional<Method> method = ReflectionUtil.getMethod(listenerType, event, parameterTypes);
+    public boolean register(final Policy policy) {
+        final Optional<Method> method = ReflectionUtil.getMethod(policy.getType(), policy.getEvent(), policy.getParameterTypes());
         if (!method.isPresent()) {
             return false;
         }
 
-        scripts.put(method.get(), script);
+        scripts.put(method.get(), policy);
         return true;
     }
 
@@ -60,15 +61,15 @@ public class PolicyManager implements EventListener {
     }
 
     @Override
-    public void onEvent(final Component<?> component, final String name, final String event, final Object... args) {
-        final Class<?>[] parameterTypes = ReflectionUtil.getTypes(args);
-        getScripts(component, event, parameterTypes).forEach(s -> executor.submit(() -> trigger(name, component, s, args)));
+    public void onEvent(final Component<?> component, final String name, final String event, final ParameterMap params) {
+        getScripts(component, event, ReflectionUtil.getTypes(params.values()))
+                .forEach(s -> executor.submit(() -> trigger(name, component, s, params)));
     }
 
-    private void trigger(final String name, final Component<?> component, final Script script, final Object... args) {
+    private void trigger(final String name, final Component<?> component, final Script script, final ParameterMap params) {
         Context.set(name, component);
         try {
-            script.run(args);
+            script.run(params);
         } catch (Exception e) {
             logger.warn("Failed to run script: {}", script, e);
         } finally {

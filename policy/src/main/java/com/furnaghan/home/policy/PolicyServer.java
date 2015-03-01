@@ -1,7 +1,6 @@
 package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
-import com.furnaghan.home.script.Script;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -47,8 +46,8 @@ public class PolicyServer implements Managed {
     @Override
     public void stop() { }
 
-    public boolean register(final Class<? extends Component.Listener> type, final String event, final Class<?>[] parameterTypes, final Script script) {
-        return policies.register(type, event, parameterTypes, script);
+    public boolean register(final Policy policy) {
+        return policies.register(policy);
     }
 
     /**

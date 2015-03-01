@@ -11,10 +11,7 @@ import org.apache.commons.lang.reflect.MethodUtils;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -23,7 +20,7 @@ public final class ReflectionUtil {
     private static final Joiner ARG_JOINER = Joiner.on(", ");
 
     @SuppressWarnings("unchecked")
-    public static <T> T proxy(final Class<T> type, InvocationHandler handler) {
+    public static <T> T proxy(final Class<T> type, final InvocationHandler handler) {
         return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, handler);
     }
 
@@ -40,10 +37,6 @@ public final class ReflectionUtil {
                 }
             }
         };
-    }
-
-    public static InvocationHandler methodInvocationHandler(final Method target, final InvocationHandler delegate) {
-        return (proxy, method, args) -> target.equals(method) ? delegate.invoke(proxy, method, args) : null;
     }
 
     public static <T> TypeReference<T> createTypeReference(final Class<T> type, final Class<?>... parameterTypes) {
@@ -70,7 +63,7 @@ public final class ReflectionUtil {
         };
     }
 
-    public static Class<?>[] getTypes(final Object... args) {
+    public static Class<?>[] getTypes(final Object[] args) {
         final Class<?>[] types = new Class<?>[args.length];
         for (int i = 0;i < args.length;i++) {
             types[i] = args[i].getClass();
@@ -78,7 +71,7 @@ public final class ReflectionUtil {
         return types;
     }
 
-    public static String toString(final String name, final Object... args) {
+    public static String toString(final String name, final Object[] args) {
         return String.format("%s(%s)", name, ARG_JOINER.join(args));
     }
 
@@ -113,24 +106,8 @@ public final class ReflectionUtil {
         return result.build();
     }
 
-    public static Optional<Method> getMethod(final Class<?> type, final String name, final Class<?>[] parameterTypes) {
+    public static Optional<Method> getMethod(final Class<?> type, final String name, final Class<?>... parameterTypes) {
         return Optional.fromNullable(MethodUtils.getMatchingAccessibleMethod(type, name, parameterTypes));
-    }
-
-    public static <T> Set<Method> getMethods(final Collection<Class<T>> types) {
-        final Set<Method> methods = Sets.newHashSet();
-        types.forEach(t -> methods.addAll(Arrays.asList(t.getMethods())));
-        return Collections.unmodifiableSet(methods);
-    }
-
-    public static <T> void checkReturnType(final Method method, final Class<T> resultType) {
-        checkReturnType(method, resultType, String.format("Return type of %s is %s, not %s",
-                method.getName(), method.getReturnType(), resultType));
-    }
-
-    public static <T> void checkReturnType(final Method method, final Class<T> resultType, final Object errorMessage) {
-        checkArgument(Void.class.isAssignableFrom(resultType) || resultType.isAssignableFrom(method.getReturnType()),
-                errorMessage);
     }
 
     public static <T> Optional<Constructor<T>> getConstructor(final Class<T> type, final Class<?>... parameterTypes) {

@@ -2,11 +2,16 @@ package com.furnaghan.home.policy;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
+import com.furnaghan.home.script.ParameterMap;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 
+import java.lang.reflect.Parameter;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 public interface EventListener {
 
@@ -18,19 +23,20 @@ public interface EventListener {
 
         return ReflectionUtil.proxy(type, (proxy, method, args) -> {
             final String event = method.getName();
-            listener.onEvent(component, name, event, args);
+            final ParameterMap params = ParameterMap.of(method, args);
 
+            listener.onEvent(component, name, event, params);
             return null;
         });
     }
 
     public static EventListener logger(final Logger logger) {
-        return (component, name, event, args) -> logger.trace("{}.{}", name, ReflectionUtil.toString(event, args));
+        return (component, name, event, params) -> logger.trace("{}.{}", name, ReflectionUtil.toString(event, params.values()));
     }
 
     public static EventListener delegate(final Collection<EventListener> delegates) {
-        return (component, name, event, args) -> delegates.forEach(d -> d.onEvent(component, name, event, args));
+        return (component, name, event, params) -> delegates.forEach(d -> d.onEvent(component, name, event, params));
     }
 
-    void onEvent(final Component<?> component, final String name, final String event, final Object... args);
+    void onEvent(final Component<?> component, final String name, final String event, final ParameterMap params);
 }

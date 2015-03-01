@@ -1,10 +1,12 @@
 package com.furnaghan.home.test;
 
+import com.furnaghan.home.component.calendar.CalendarType;
 import com.furnaghan.home.component.clock.ClockType;
 import com.furnaghan.home.component.clock.system.SystemClockComponent;
 import com.furnaghan.home.component.clock.system.SystemClockConfiguration;
 import com.furnaghan.home.policy.Context;
 import com.furnaghan.home.policy.PolicyServer;
+import com.furnaghan.home.policy.ScriptedPolicy;
 import com.furnaghan.home.registry.ComponentRegistry;
 import com.furnaghan.home.registry.config.ConfigurationStore;
 import com.furnaghan.home.registry.config.FileConfigurationStore;
@@ -49,15 +51,13 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
 
         final ScriptFactory scriptFactory = new JavaxScriptFactory();
         scriptFactory.setVariable("context", Context::get);
+        scriptFactory.setVariable("registry", components);
 
-        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
-                scriptFactory.load(TestApplication.class.getResource("/scripts/test.py"))
-        );
-        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
-                scriptFactory.load(TestApplication.class.getResource("/scripts/test.groovy"))
-        );
-        policyServer.register(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
-                scriptFactory.load(TestApplication.class.getResource("/scripts/test.js"))
-        );
+        policyServer.register(new ScriptedPolicy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
+                scriptFactory.load(TestApplication.class.getResource("/scripts/tick.py"))));
+
+        policyServer.register(new ScriptedPolicy(CalendarType.Listener.class, "notify",
+                new Class<?>[]{Date.class, Duration.class, String.class, Optional.class},
+                scriptFactory.load(TestApplication.class.getResource("/scripts/wfh.py"))));
     }
 }

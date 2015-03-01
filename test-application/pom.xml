@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>policy-script-ruby</artifactId>
+            <artifactId>component-calendar-google</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

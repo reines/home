@@ -6,6 +6,7 @@ import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.SimpleBindings;
 import java.io.Reader;
+import java.util.Map;
 
 public class JavaxScript implements Script {
 
@@ -19,20 +20,20 @@ public class JavaxScript implements Script {
         this.script = script;
     }
 
-    private Bindings bind(final Object[] args) {
+    private Bindings bind(final Map<String, ?> args) {
         final SimpleBindings binding = new SimpleBindings();
 
+        binding.putAll(args);
         binding.putAll(factory.getVariables());
-        binding.put("args", args);
 
         return binding;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T run(final Object... args) throws Exception {
+    public <T> T run(final ParameterMap params) throws Exception {
         try (final Reader reader = script.openStream()) {
-            return (T) engine.eval(reader, bind(args));
+            return (T) engine.eval(reader, bind(params.map()));
         }
     }
 }

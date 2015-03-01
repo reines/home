@@ -123,6 +123,7 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgument>-parameters</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>
