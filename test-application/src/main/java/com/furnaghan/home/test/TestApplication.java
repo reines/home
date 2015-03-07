@@ -33,11 +33,12 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
     @Override
     public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
         // TODO: remove, temp testing
-        policyBundle.saveComponent(SystemClockComponent.class, "test_clock",
+        policyBundle.getConfigurationStore().save(SystemClockComponent.class, "test_clock",
                 Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
-        policyBundle.savePolicy("test_tick",
+
+        policyBundle.getPolicyStore().save("test_tick",
                 new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
 
-        environment.jersey().register(new ComponentResource(policyBundle.getRegistry()));
+        environment.jersey().register(new ComponentResource(policyBundle.getComponentList()));
     }
 }

@@ -6,10 +6,9 @@ import com.furnaghan.home.policy.store.FilePolicyStore;
 import com.furnaghan.home.policy.store.PolicyStore;
 import com.furnaghan.home.policy.store.ResourceScriptStore;
 import com.furnaghan.home.policy.store.ScriptStore;
-import com.furnaghan.home.script.JavaxScriptFactory;
-import com.furnaghan.home.script.ScriptFactory;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class PolicyServerConfiguration {
@@ -20,22 +19,17 @@ public class PolicyServerConfiguration {
 
     @Valid
     @NotNull
-    private final ScriptFactory scriptFactory = new JavaxScriptFactory(); // TODO: configure
-
-    @Valid
-    @NotNull
     private final PolicyStore policyStore = new FilePolicyStore("/tmp/home-policies"); // TODO: configure
 
     @Valid
     @NotNull
     private final ConfigurationStore configurationStore = new FileConfigurationStore("/tmp/home-config"); // TODO: configure
 
+    @Min(1)
+    private final int threads = 10;
+
     public ScriptStore getScriptStore() {
         return scriptStore;
-    }
-
-    public ScriptFactory getScriptFactory() {
-        return scriptFactory;
     }
 
     public PolicyStore getPolicyStore() {
@@ -44,5 +38,9 @@ public class PolicyServerConfiguration {
 
     public ConfigurationStore getConfigurationStore() {
         return configurationStore;
+    }
+
+    public int getThreads() {
+        return threads;
     }
 }

@@ -1,7 +1,7 @@
 package com.furnaghan.home.test.resources;
 
 import com.furnaghan.home.component.Components;
-import com.furnaghan.home.component.registry.ComponentRegistry;
+import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.test.api.ComponentDescription;
 import com.furnaghan.home.test.api.Type;
 import com.google.common.collect.Collections2;
@@ -19,16 +19,16 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class ComponentResource {
 
-    private final ComponentRegistry registry;
+    private final ComponentList components;
 
-    public ComponentResource(final ComponentRegistry registry) {
-        this.registry = registry;
+    public ComponentResource(final ComponentList components) {
+        this.components = components;
     }
 
     @GET
     @Path("/registered")
     public Map<String, ComponentDescription> listRegistered() {
-        return Maps.transformValues(registry.getComponents(), ComponentDescription::from);
+        return Maps.transformValues(components.asMap(), ComponentDescription::from);
     }
 
     @GET

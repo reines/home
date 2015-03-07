@@ -38,8 +38,17 @@ public class ScriptManager implements EventListener {
         }
 
         logger.info("Registered policy for {}", ReflectionUtil.toString(event, parameterTypes));
-        scripts.put(method.get(), script);
-        return true;
+        return scripts.put(method.get(), script);
+    }
+
+    public boolean remove(final Class<?> type, final String event, final Class<?>[] parameterTypes, final Script script) {
+        final Optional<Method> method = ReflectionUtil.getMethod(type, event, parameterTypes);
+        if (!method.isPresent()) {
+            logger.warn("Failed to remove policy for {}, no such method", ReflectionUtil.toString(event, parameterTypes));
+            return false;
+        }
+
+        return scripts.remove(method.get(), script);
     }
 
     private Collection<Script> getScripts(final Component<?> component, final String event, final Class<?>[] parameterTypes) {

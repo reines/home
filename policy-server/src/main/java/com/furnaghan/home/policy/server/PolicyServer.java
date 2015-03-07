@@ -3,13 +3,13 @@ package com.furnaghan.home.policy.server;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.store.ScriptStore;
+import com.furnaghan.home.script.Script;
 import com.furnaghan.home.script.ScriptFactory;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import static com.furnaghan.home.component.Components.getName;
@@ -33,7 +32,7 @@ public class PolicyServer {
 
     private final Map<String, Component<?>> components;
     private final List<EventListener> listeners;
-    private final Set<Policy> policies;
+    private final Map<Policy, Script> policies;
     private final ScriptManager scripts;
     private final ScriptStore scriptStore;
     private final ScriptFactory scriptFactory;
@@ -44,7 +43,7 @@ public class PolicyServer {
 
         components = Maps.newConcurrentMap();
         listeners = Lists.newCopyOnWriteArrayList();
-        policies = Sets.newConcurrentHashSet();
+        policies = Maps.newConcurrentMap();
         scripts = new ScriptManager(executor);
 
         // Add a logging listener
@@ -55,23 +54,30 @@ public class PolicyServer {
     }
 
     public synchronized boolean register(final Policy policy) {
-        if (policies.contains(policy)) {
+        if (policies.containsKey(policy)) {
             return true;
         }
 
-        final Optional<CharSource> script = scriptStore.load(policy.getScript());
-        checkState(script.isPresent(), "Unable to find script: " + policy.getScript());
+        final Optional<CharSource> source = scriptStore.load(policy.getScript());
+        checkState(source.isPresent(), "Unable to find script: " + policy.getScript());
 
         final String type = Files.getFileExtension(policy.getScript());
-        final boolean registered = scripts.register(policy.getType(), policy.getEvent(), policy.getParameterTypes(),
-                scriptFactory.load(script.get(), type));
+        final Script script = scriptFactory.load(source.get(), type);
+        final boolean registered = scripts.register(policy.getType(), policy.getEvent(),
+                policy.getParameterTypes(), script);
 
         if (registered) {
-            policies.add(policy);
+            policies.put(policy, script);
             return true;
         }
 
         return false;
+    }
+
+    public synchronized boolean remove(final Policy policy) {
+        final Optional<Script> script = Optional.fromNullable(policies.get(policy));
+        return script.isPresent() && scripts.remove(policy.getType(), policy.getEvent(),
+                policy.getParameterTypes(), script.get());
     }
 
     /**
@@ -92,6 +98,10 @@ public class PolicyServer {
         logger.info("Registered {} '{}'", getName(component), name);
         component.addListener(listener);
         return true;
+    }
+
+    public synchronized boolean remove(final String name) {
+        return components.remove(name) != null;
     }
 
     /**

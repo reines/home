@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import static com.furnaghan.home.component.Components.getName;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ComponentRegistry {
+public class ComponentRegistry implements ComponentList {
 
     public static interface Listener {
         void onComponentAdded(final String name, final Component<?> component);
@@ -48,18 +48,21 @@ public class ComponentRegistry {
         listeners.forEach(action);
     }
 
-    public Map<String, Component<?>> getComponents() {
+    @Override
+    public Map<String, Component<?>> asMap() {
         return Collections.unmodifiableMap(componentsByName);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ComponentType> Collection<T> getComponents(final Class<T> type) {
+    @Override
+    public <T extends ComponentType> Collection<T> getByType(final Class<T> type) {
         checkNotNull(type, "Component type cannot be null");
         return Collections.unmodifiableCollection(Collections2.transform(componentsByType.get(type), type::cast));
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ComponentType> Optional<T> getComponent(final String name) {
+    @Override
+    public <T extends ComponentType> Optional<T> getByName(final String name) {
         checkNotNull(name, "Component name cannot be null");
         return Optional.fromNullable((T) componentsByName.get(name));
     }
@@ -70,8 +73,6 @@ public class ComponentRegistry {
             logger.debug("Not loading {} '{}', it is already loaded.", getName(componentType), name);
             return existing;
         }
-
-        logger.debug("Loading {} '{}'", getName(componentType), name);
 
         try {
             final Component<?> component = Components.create(componentType, configuration);
@@ -87,5 +88,16 @@ public class ComponentRegistry {
             logger.error(String.format("Unable to load %s '%s' ", getName(componentType), name), e.getCause());
             return Optional.absent();
         }
+    }
+
+    public synchronized boolean remove(final String name) {
+        final Optional<Component<?>> component = Optional.fromNullable(componentsByName.remove(name));
+        if (!component.isPresent()) {
+            return false;
+        }
+
+        Components.getComponentTypes(component.get().getClass()).forEach(type -> componentsByType.remove(type, component));
+        trigger(l -> l.onComponentRemoved(name, component.get()));
+        return true;
     }
 }

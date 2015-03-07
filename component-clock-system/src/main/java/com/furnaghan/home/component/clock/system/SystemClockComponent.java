@@ -16,7 +16,11 @@ public class SystemClockComponent extends Component<ClockType.Listener> implemen
     }
 
     private void tick() {
-        final Date now = new Date();
-        trigger((listener) -> listener.tick(now));
+        trigger((listener) -> listener.tick(getTime()));
+    }
+
+    @Override
+    public Date getTime() {
+        return new Date();
     }
 }
