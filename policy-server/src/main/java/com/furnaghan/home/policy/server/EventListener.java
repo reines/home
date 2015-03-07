@@ -1,17 +1,13 @@
-package com.furnaghan.home.policy;
+package com.furnaghan.home.policy.server;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.script.ParameterMap;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Parameter;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
 
 public interface EventListener {
 

@@ -1,4 +1,4 @@
-package com.furnaghan.home.policy;
+package com.furnaghan.home.policy.server;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
@@ -19,24 +19,26 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
-public class PolicyManager implements EventListener {
+public class ScriptManager implements EventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger( PolicyManager.class );
+    private static final Logger logger = LoggerFactory.getLogger( ScriptManager.class );
 
     private final Multimap<Method, Script> scripts = HashMultimap.create();
     private final ExecutorService executor;
 
-    public PolicyManager(final ExecutorService executor) {
+    public ScriptManager(final ExecutorService executor) {
         this.executor = executor;
     }
 
-    public boolean register(final Policy policy) {
-        final Optional<Method> method = ReflectionUtil.getMethod(policy.getType(), policy.getEvent(), policy.getParameterTypes());
+    public boolean register(final Class<?> type, final String event, final Class<?>[] parameterTypes, final Script script) {
+        final Optional<Method> method = ReflectionUtil.getMethod(type, event, parameterTypes);
         if (!method.isPresent()) {
+            logger.warn("Failed to register policy for {}, no such method", ReflectionUtil.toString(event, parameterTypes));
             return false;
         }
 
-        scripts.put(method.get(), policy);
+        logger.info("Registered policy for {}", ReflectionUtil.toString(event, parameterTypes));
+        scripts.put(method.get(), script);
         return true;
     }
 

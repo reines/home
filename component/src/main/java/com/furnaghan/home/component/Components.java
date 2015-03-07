@@ -20,6 +20,10 @@ public final class Components {
         return getName(component.getClass());
     }
 
+    public static Set<Class<Component>> discover() {
+        return ReflectionUtil.discoverServices(Component.class);
+    }
+
     public static <T extends ComponentType> Set<Class<T>> getComponentTypes(final Class<? extends Component> component) {
         final Type[] types = component.getGenericInterfaces();
         return ReflectionUtil.getAssignableTypes(types, ComponentType.class);

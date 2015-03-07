@@ -1,17 +1,11 @@
 package com.furnaghan.home.test;
 
-import com.furnaghan.home.component.calendar.CalendarType;
 import com.furnaghan.home.component.clock.ClockType;
 import com.furnaghan.home.component.clock.system.SystemClockComponent;
 import com.furnaghan.home.component.clock.system.SystemClockConfiguration;
-import com.furnaghan.home.policy.Context;
-import com.furnaghan.home.policy.PolicyServer;
-import com.furnaghan.home.policy.ScriptedPolicy;
-import com.furnaghan.home.registry.ComponentRegistry;
-import com.furnaghan.home.registry.config.ConfigurationStore;
-import com.furnaghan.home.registry.config.FileConfigurationStore;
-import com.furnaghan.home.script.JavaxScriptFactory;
-import com.furnaghan.home.script.ScriptFactory;
+import com.furnaghan.home.policy.Policy;
+import com.furnaghan.home.policy.PolicyServerBundle;
+import com.furnaghan.home.test.config.ConfiguredBundleWrapper;
 import com.furnaghan.home.test.config.TestApplicationConfiguration;
 import com.furnaghan.home.test.resources.ComponentResource;
 import com.google.common.base.Optional;
@@ -21,43 +15,29 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Duration;
 
 import java.util.Date;
-import java.util.concurrent.Executors;
 
 public class TestApplication extends Application<TestApplicationConfiguration> {
 
-    public static void main(String... args) throws Exception {
+    public static void main(final String... args) throws Exception {
         new TestApplication().run(args);
     }
 
+    private PolicyServerBundle policyBundle;
+
     @Override
-    public void initialize(final Bootstrap<TestApplicationConfiguration> bootstrap) { }
+    public void initialize(final Bootstrap<TestApplicationConfiguration> bootstrap) {
+        policyBundle = new PolicyServerBundle();
+        bootstrap.addBundle(new ConfiguredBundleWrapper<>(policyBundle, TestApplicationConfiguration::getPolicyServer));
+    }
 
     @Override
     public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
-        final ConfigurationStore configurationStore = new FileConfigurationStore("/tmp/home-config");
-        environment.lifecycle().manage(configurationStore);
+        // TODO: remove, temp testing
+        policyBundle.saveComponent(SystemClockComponent.class, "test_clock",
+                Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
+        policyBundle.savePolicy("test_tick",
+                new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
 
-        configurationStore.save(SystemClockComponent.class, "test", Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
-
-        final ComponentRegistry components = new ComponentRegistry(configurationStore);
-        environment.lifecycle().manage(components);
-
-        final PolicyServer policyServer = new PolicyServer(Executors.newCachedThreadPool());
-        environment.lifecycle().manage(policyServer);
-
-        components.addListener(policyServer::register);
-
-        environment.jersey().register(new ComponentResource(components));
-
-        final ScriptFactory scriptFactory = new JavaxScriptFactory();
-        scriptFactory.setVariable("context", Context::get);
-        scriptFactory.setVariable("registry", components);
-
-        policyServer.register(new ScriptedPolicy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class},
-                scriptFactory.load(TestApplication.class.getResource("/scripts/tick.py"))));
-
-        policyServer.register(new ScriptedPolicy(CalendarType.Listener.class, "notify",
-                new Class<?>[]{Date.class, Duration.class, String.class, Optional.class},
-                scriptFactory.load(TestApplication.class.getResource("/scripts/wfh.py"))));
+        environment.jersey().register(new ComponentResource(policyBundle.getRegistry()));
     }
 }

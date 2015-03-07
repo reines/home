@@ -11,5 +11,5 @@
 
     <logger name="metrics" level="TRACE" />
     <logger name="com.furnaghan" level="DEBUG" />
-    <logger name="com.furnaghan.home.policy.PolicyServer" level="TRACE" />
+    <logger name="com.furnaghan.home.policy.server.PolicyServer" level="TRACE" />
 </configuration>

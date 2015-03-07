@@ -1,4 +1,4 @@
-package com.furnaghan.home.policy;
+package com.furnaghan.home.policy.server;
 
 import com.furnaghan.home.component.Component;
 

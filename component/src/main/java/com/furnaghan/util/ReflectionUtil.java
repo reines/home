@@ -5,19 +5,47 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.io.CharStreams;
 import org.apache.commons.lang.reflect.MethodUtils;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.*;
-import java.util.*;
-
-import static com.google.common.base.Preconditions.checkArgument;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Set;
 
 public final class ReflectionUtil {
 
     private static final Joiner ARG_JOINER = Joiner.on(", ");
+
+    public static <T> Set<Class<T>> discoverServices(final Class<T> parent) {
+        final ClassLoader classLoader = parent.getClassLoader();
+
+        final Set<Class<T>> serviceClasses = Sets.newHashSet();
+        try {
+            final Enumeration<URL> resources = classLoader.getResources("META-INF/services/" + parent.getName());
+            while (resources.hasMoreElements()) {
+                final URL url = resources.nextElement();
+                try (final Reader reader = new InputStreamReader(url.openStream())) {
+                    final Collection<Class<T>> types = Collections2.transform(
+                            CharStreams.readLines(reader), ReflectionUtil.classLoader(classLoader));
+                    serviceClasses.addAll(types);
+                }
+            }
+        }
+        catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+        return Collections.unmodifiableSet( serviceClasses );
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> T proxy(final Class<T> type, final InvocationHandler handler) {

@@ -38,11 +38,11 @@
         <module>component-tv</module>
         <module>component-tv-bravia</module>
         <module>policy</module>
-        <module>registry</module>
         <module>test-application</module>
         <module>policy-script</module>
         <module>policy-script-groovy</module>
         <module>policy-script-python</module>
+        <module>policy-server</module>
     </modules>
 
     <properties>

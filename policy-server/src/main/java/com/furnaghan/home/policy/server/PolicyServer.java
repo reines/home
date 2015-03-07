@@ -1,12 +1,17 @@
-package com.furnaghan.home.policy;
+package com.furnaghan.home.policy.server;
 
 import com.furnaghan.home.component.Component;
+import com.furnaghan.home.policy.Policy;
+import com.furnaghan.home.policy.store.ScriptStore;
+import com.furnaghan.home.script.ScriptFactory;
 import com.furnaghan.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import io.dropwizard.lifecycle.Managed;
+import com.google.common.collect.Sets;
+import com.google.common.io.CharSource;
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,40 +19,59 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import static com.furnaghan.home.component.Components.getName;
-import static com.furnaghan.home.policy.EventListener.proxy;
+import static com.furnaghan.home.policy.server.EventListener.proxy;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
-public class PolicyServer implements Managed {
+public class PolicyServer {
 
     private static final Logger logger = LoggerFactory.getLogger( PolicyServer.class );
 
     private final Map<String, Component<?>> components;
     private final List<EventListener> listeners;
-    private final PolicyManager policies;
+    private final Set<Policy> policies;
+    private final ScriptManager scripts;
+    private final ScriptStore scriptStore;
+    private final ScriptFactory scriptFactory;
 
-    public PolicyServer(final ExecutorService executor) {
+    public PolicyServer(final ExecutorService executor, final ScriptStore scriptStore, final ScriptFactory scriptFactory) {
+        this.scriptStore = scriptStore;
+        this.scriptFactory = scriptFactory;
+
         components = Maps.newConcurrentMap();
         listeners = Lists.newCopyOnWriteArrayList();
-        policies = new PolicyManager(executor);
+        policies = Sets.newConcurrentHashSet();
+        scripts = new ScriptManager(executor);
 
         // Add a logging listener
         listeners.add(EventListener.logger(logger));
 
-        // Add a policy manager - triggers policies when appropriate
-        listeners.add(policies);
+        // Add a script manager - triggers scripts when appropriate
+        listeners.add(scripts);
     }
 
-    @Override
-    public void start() { }
+    public synchronized boolean register(final Policy policy) {
+        if (policies.contains(policy)) {
+            return true;
+        }
 
-    @Override
-    public void stop() { }
+        final Optional<CharSource> script = scriptStore.load(policy.getScript());
+        checkState(script.isPresent(), "Unable to find script: " + policy.getScript());
 
-    public boolean register(final Policy policy) {
-        return policies.register(policy);
+        final String type = Files.getFileExtension(policy.getScript());
+        final boolean registered = scripts.register(policy.getType(), policy.getEvent(), policy.getParameterTypes(),
+                scriptFactory.load(script.get(), type));
+
+        if (registered) {
+            policies.add(policy);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -57,7 +81,7 @@ public class PolicyServer implements Managed {
      * @param component     The component itself.
      * @return              True if the component was registered, False if this name was already in use.
      */
-    public <T extends Component.Listener> boolean register(final String name, final Component<T> component) {
+    public synchronized <T extends Component.Listener> boolean register(final String name, final Component<T> component) {
         final boolean added = components.put(name, component) == null;
         if (!added) {
             logger.debug("Not registering {}, there is already a component called '{}'", component, name);

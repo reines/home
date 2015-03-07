@@ -1,7 +1,7 @@
 package com.furnaghan.home.test.resources;
 
 import com.furnaghan.home.component.Components;
-import com.furnaghan.home.registry.ComponentRegistry;
+import com.furnaghan.home.component.registry.ComponentRegistry;
 import com.furnaghan.home.test.api.ComponentDescription;
 import com.furnaghan.home.test.api.Type;
 import com.google.common.collect.Collections2;
@@ -28,19 +28,19 @@ public class ComponentResource {
     @GET
     @Path("/registered")
     public Map<String, ComponentDescription> listRegistered() {
-        return Maps.transformValues(registry.getRegisteredComponents(), ComponentDescription::from);
+        return Maps.transformValues(registry.getComponents(), ComponentDescription::from);
     }
 
     @GET
     @Path("/all")
     public Collection<ComponentDescription> listAll() {
-        return Collections2.transform(registry.getComponents(), ComponentDescription::from);
+        return Collections2.transform(Components.discover(), ComponentDescription::from);
     }
 
     @GET
     @Path("/all/types")
     public Collection<Type> listAllTypes() {
-        return FluentIterable.from(registry.getComponents())
+        return FluentIterable.from(Components.discover())
                 .transformAndConcat(Components::getComponentTypes)
                 .transform(Type::of)
                 .toSet();
