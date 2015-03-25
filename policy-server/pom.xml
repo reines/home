@@ -16,5 +16,10 @@
             <artifactId>policy</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.furnaghan.home</groupId>
+            <artifactId>policy-server-store</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,8 @@
-package com.furnaghan.home.component.registry.config;
+package com.furnaghan.home.component.registry.store;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
@@ -18,19 +21,17 @@ import static com.furnaghan.home.component.Components.getName;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+@JsonTypeName("file")
 public class FileConfigurationStore extends ConfigurationStore {
 
     private static final ObjectMapper JSON = Jackson.newObjectMapper();
 
-    private final File dir;
+    private final File path;
 
-    public FileConfigurationStore(final String path) {
-        this (new File(path));
-    }
-
-    public FileConfigurationStore(final File dir) {
-        this.dir = dir;
-        checkArgument(dir.isDirectory() || dir.mkdirs(), "Unable to create directory: " + dir.getAbsolutePath());
+    @JsonCreator
+    public FileConfigurationStore(@JsonProperty("path") final File path) {
+        this.path = path;
+        checkArgument(path.isDirectory() || path.mkdirs(), "Unable to create directory: " + path.getAbsolutePath());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class FileConfigurationStore extends ConfigurationStore {
     }
 
     private File typeDir(final Class<? extends Component> type) {
-        return new File(dir, getName(type));
+        return new File(path, getName(type));
     }
 
     @Override

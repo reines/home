@@ -3,11 +3,14 @@ package com.furnaghan.home.test;
 import com.furnaghan.home.component.clock.ClockType;
 import com.furnaghan.home.component.clock.system.SystemClockComponent;
 import com.furnaghan.home.component.clock.system.SystemClockConfiguration;
+import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.PolicyServerBundle;
+import com.furnaghan.home.policy.store.PolicyStore;
 import com.furnaghan.home.test.config.ConfiguredBundleWrapper;
 import com.furnaghan.home.test.config.TestApplicationConfiguration;
 import com.furnaghan.home.test.resources.ComponentResource;
+import com.furnaghan.home.test.resources.PolicyResource;
 import com.google.common.base.Optional;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -32,13 +35,16 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
 
     @Override
     public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
+        final ConfigurationStore configurationStore = configuration.getPolicyServer().getConfigurationStore();
+        final PolicyStore policyStore = configuration.getPolicyServer().getPolicyStore();
+
         // TODO: remove, temp testing
-        policyBundle.getConfigurationStore().save(SystemClockComponent.class, "test_clock",
+        configurationStore.save(SystemClockComponent.class, "test_clock",
                 Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
 
-        policyBundle.getPolicyStore().save("test_tick",
-                new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
+        policyStore.save(new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
 
         environment.jersey().register(new ComponentResource(policyBundle.getComponentList()));
+        environment.jersey().register(new PolicyResource(policyStore));
     }
 }

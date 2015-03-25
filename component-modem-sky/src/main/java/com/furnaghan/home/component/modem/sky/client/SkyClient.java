@@ -1,7 +1,7 @@
 package com.furnaghan.home.component.modem.sky.client;
 
 import com.furnaghan.home.component.modem.model.LineStats;
-import com.furnaghan.util.Speed;
+import com.furnaghan.home.util.Speed;
 import com.google.common.base.Throwables;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;

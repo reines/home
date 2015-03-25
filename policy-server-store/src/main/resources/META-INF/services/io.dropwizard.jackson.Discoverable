@@ -1,0 +1,3 @@
+com.furnaghan.home.component.registry.store.ConfigurationStore
+com.furnaghan.home.policy.store.PolicyStore
+com.furnaghan.home.policy.store.ScriptStore

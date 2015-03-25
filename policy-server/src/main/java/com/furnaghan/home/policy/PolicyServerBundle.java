@@ -4,7 +4,7 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.component.registry.ComponentRegistry;
-import com.furnaghan.home.component.registry.config.ConfigurationStore;
+import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.policy.config.PolicyServerConfiguration;
 import com.furnaghan.home.policy.server.Context;
 import com.furnaghan.home.policy.server.PolicyServer;
@@ -23,8 +23,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PolicyServerBundle implements ConfiguredBundle<PolicyServerConfiguration> {
 
-    private PolicyStore policyStore;
-    private ConfigurationStore configurationStore;
     private ComponentRegistry componentRegistry;
 
     @Override
@@ -41,15 +39,15 @@ public class PolicyServerBundle implements ConfiguredBundle<PolicyServerConfigur
                 .build();
         final PolicyServer policyServer = new PolicyServer(policyExecutor, scriptStore, scriptFactory);
 
-        policyStore = configuration.getPolicyStore();
+        final PolicyStore policyStore = configuration.getPolicyStore();
         policyStore.addListener(new PolicyStore.Listener() {
             @Override
-            public void onPolicyAdded(final String name, final Policy policy) {
+            public void onPolicyAdded(final Policy policy) {
                 policyServer.register(policy);
             }
 
             @Override
-            public void onPolicyRemoved(final String name, final Policy policy) {
+            public void onPolicyRemoved(final Policy policy) {
                 policyServer.remove(policy);
             }
         });
@@ -68,7 +66,7 @@ public class PolicyServerBundle implements ConfiguredBundle<PolicyServerConfigur
             }
         });
 
-        configurationStore = configuration.getConfigurationStore();
+        final ConfigurationStore configurationStore = configuration.getConfigurationStore();
         configurationStore.addListener(new ConfigurationStore.Listener() {
             @Override
             public void onConfigurationAdded(final Class<? extends Component> type, final String name, final Optional<Configuration> configuration) {
@@ -84,14 +82,6 @@ public class PolicyServerBundle implements ConfiguredBundle<PolicyServerConfigur
 
         scriptFactory.setVariable("context", Context::get);
         scriptFactory.setVariable("registry", componentRegistry);
-    }
-
-    public PolicyStore getPolicyStore() {
-        return checkNotNull(policyStore);
-    }
-
-    public ConfigurationStore getConfigurationStore() {
-        return checkNotNull(configurationStore);
     }
 
     public ComponentList getComponentList() {

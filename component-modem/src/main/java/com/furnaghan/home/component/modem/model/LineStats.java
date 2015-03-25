@@ -1,6 +1,6 @@
 package com.furnaghan.home.component.modem.model;
 
-import com.furnaghan.util.Speed;
+import com.furnaghan.home.util.Speed;
 import com.google.common.base.Objects;
 
 public class LineStats {

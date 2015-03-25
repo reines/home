@@ -1,4 +1,4 @@
-package com.furnaghan.util;
+package com.furnaghan.home.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -4,8 +4,12 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.ComponentType;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.component.Configuration;
+import com.furnaghan.home.util.Listenable;
 import com.google.common.base.Optional;
-import com.google.common.collect.*;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,12 +17,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static com.furnaghan.home.component.Components.getName;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ComponentRegistry implements ComponentList {
+public class ComponentRegistry extends Listenable<ComponentRegistry.Listener> implements ComponentList {
 
     public static interface Listener {
         void onComponentAdded(final String name, final Component<?> component);
@@ -29,23 +32,10 @@ public class ComponentRegistry implements ComponentList {
 
     private final Map<String, Component<?>> componentsByName;
     private final Multimap<Class<? extends ComponentType>, Component<?>> componentsByType;
-    private final Collection<Listener> listeners = Lists.newCopyOnWriteArrayList();
 
     public ComponentRegistry() {
         componentsByName = Maps.newConcurrentMap();
         componentsByType = HashMultimap.create();
-    }
-
-    public void addListener(final Listener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(final Listener listener) {
-        listeners.remove(listener);
-    }
-
-    protected final void trigger(final Consumer<Listener> action) {
-        listeners.forEach(action);
     }
 
     @Override
