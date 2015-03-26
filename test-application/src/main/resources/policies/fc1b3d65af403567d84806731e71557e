@@ -1,0 +1,6 @@
+{
+  "type" : "com.furnaghan.home.component.clock.ClockType$Listener",
+  "event" : "tick",
+  "parameterTypes" : [ "java.util.Date" ],
+  "script" : "tick.py"
+}

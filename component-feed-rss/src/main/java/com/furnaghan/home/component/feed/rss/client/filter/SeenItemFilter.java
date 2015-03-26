@@ -1,6 +1,7 @@
 package com.furnaghan.home.component.feed.rss.client.filter;
 
-import com.furnaghan.home.component.feed.rss.client.util.JsonByteFunnel;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.furnaghan.home.util.JsonUtils;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
@@ -13,6 +14,7 @@ import java.util.function.Predicate;
 public class SeenItemFilter<T> implements Predicate<T> {
 
     private static final HashFunction HASH_FUNCTION = Hashing.sha1();
+    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
 
     private final int maxSize;
     private final LinkedHashSet<HashCode> seen;
@@ -22,7 +24,7 @@ public class SeenItemFilter<T> implements Predicate<T> {
         this.maxSize = maxSize;
 
         seen = new LinkedHashSet<>();
-        funnel = new JsonByteFunnel<>();
+        funnel = JsonUtils.jsonFunnel(JSON);
     }
 
     @Override

@@ -4,10 +4,10 @@ policyServer:
     path: src/main/resources/scripts
   policyStore:
     type: file
-    path: /tmp/home-policies
+    path: src/main/resources/policies
   configurationStore:
     type: file
-    path: /tmp/home-config
+    path: src/main/resources/components
 
 logging:
   level: INFO

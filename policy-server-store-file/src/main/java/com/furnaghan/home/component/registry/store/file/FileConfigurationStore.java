@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
+import com.furnaghan.home.util.JsonUtils;
 import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-import io.dropwizard.jackson.Jackson;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FileConfigurationStore extends ConfigurationStore {
 
-    private static final ObjectMapper JSON = Jackson.newObjectMapper();
+    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
 
     private final File path;
 

@@ -24,13 +24,11 @@ public class PolicyResource {
     }
 
     @POST
-    @Path("/")
     public void create(final Policy policy) {
         store.save(policy);
     }
 
     @GET
-    @Path("/")
     public Collection<PolicyDescription> list() {
         return Collections2.transform(server.list(), PolicyDescription::from);
     }

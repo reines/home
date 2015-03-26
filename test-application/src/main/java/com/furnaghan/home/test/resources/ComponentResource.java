@@ -54,7 +54,6 @@ public class ComponentResource {
     }
 
     @GET
-    @Path("/")
     public Map<String, ComponentDescription> list() {
         return Maps.transformValues(registry.asMap(), ComponentDescription::from);
     }

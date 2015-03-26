@@ -3,13 +3,14 @@ package com.furnaghan.home.policy.store.file;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.store.PolicyStore;
+import com.furnaghan.home.policy.util.PolicyFunnel;
 import com.furnaghan.home.util.JsonUtils;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.hash.Funnel;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import io.dropwizard.jackson.Jackson;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +21,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class FilePolicyStore extends PolicyStore {
 
-    private static final ObjectMapper JSON = Jackson.newObjectMapper();
+    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
     private static final HashFunction HASH_FUNCTION = Hashing.md5();
+    private static final Funnel<Policy> POLICY_FUNNEL = new PolicyFunnel();
 
     private final File path;
 
@@ -31,7 +33,7 @@ public class FilePolicyStore extends PolicyStore {
     }
 
     private File policyFile(final Policy policy) {
-        final HashCode hash = HASH_FUNCTION.hashObject(policy, JsonUtils.jsonFunnel(JSON));
+        final HashCode hash = HASH_FUNCTION.hashObject(policy, POLICY_FUNNEL);
         return new File(path, hash.toString());
     }
 

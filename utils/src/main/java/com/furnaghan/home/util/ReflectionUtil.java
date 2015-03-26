@@ -9,7 +9,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.CharStreams;
-import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang.reflect.MethodUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
