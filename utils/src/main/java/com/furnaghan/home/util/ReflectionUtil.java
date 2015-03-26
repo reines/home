@@ -1,4 +1,4 @@
-package com.furnaghan.util;
+package com.furnaghan.home.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Function;
@@ -9,7 +9,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.CharStreams;
-import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

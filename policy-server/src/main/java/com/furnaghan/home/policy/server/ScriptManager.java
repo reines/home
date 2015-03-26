@@ -4,7 +4,7 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.script.ParameterMap;
 import com.furnaghan.home.script.Script;
-import com.furnaghan.util.ReflectionUtil;
+import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;

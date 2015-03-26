@@ -1,6 +1,7 @@
 package com.furnaghan.home.test.api;
 
 import com.furnaghan.home.policy.Policy;
+import com.furnaghan.home.util.NamedType;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;
@@ -10,26 +11,26 @@ public class PolicyDescription {
 
     public static PolicyDescription from(final Policy policy) {
         return new PolicyDescription(
-                Type.of(policy.getType()),
+                NamedType.of(policy.getType()),
                 policy.getEvent(),
-                Lists.transform(Arrays.asList(policy.getParameterTypes()), Type::of),
+                Lists.transform(Arrays.asList(policy.getParameterTypes()), NamedType::of),
                 policy.getScript()
         );
     }
 
-    private final Type type;
+    private final NamedType type;
     private final String event;
-    private final List<Type> parameterTypes;
+    private final List<NamedType> parameterTypes;
     private final String script;
 
-    public PolicyDescription(final Type type, final String event, final List<Type> parameterTypes, final String script) {
+    public PolicyDescription(final NamedType type, final String event, final List<NamedType> parameterTypes, final String script) {
         this.type = type;
         this.event = event;
         this.parameterTypes = parameterTypes;
         this.script = script;
     }
 
-    public Type getType() {
+    public NamedType getType() {
         return type;
     }
 
@@ -37,7 +38,7 @@ public class PolicyDescription {
         return event;
     }
 
-    public List<Type> getParameterTypes() {
+    public List<NamedType> getParameterTypes() {
         return parameterTypes;
     }
 

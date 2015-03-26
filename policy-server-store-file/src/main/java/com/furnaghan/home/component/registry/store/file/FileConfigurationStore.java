@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
-import com.furnaghan.util.ReflectionUtil;
+import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;

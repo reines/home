@@ -3,7 +3,7 @@ package com.furnaghan.home.policy.server;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.script.ParameterMap;
-import com.furnaghan.util.ReflectionUtil;
+import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 

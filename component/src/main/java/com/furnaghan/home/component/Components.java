@@ -1,6 +1,6 @@
 package com.furnaghan.home.component;
 
-import com.furnaghan.util.ReflectionUtil;
+import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 

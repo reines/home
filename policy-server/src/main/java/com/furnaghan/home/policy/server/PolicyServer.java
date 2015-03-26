@@ -5,7 +5,7 @@ import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.store.ScriptStore;
 import com.furnaghan.home.script.Script;
 import com.furnaghan.home.script.ScriptFactory;
-import com.furnaghan.util.ReflectionUtil;
+import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;

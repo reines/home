@@ -5,7 +5,7 @@ import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.test.api.ComponentDescription;
-import com.furnaghan.home.test.api.Type;
+import com.furnaghan.home.util.NamedType;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.NotFoundException;
@@ -33,7 +33,7 @@ public class ComponentResource {
     @Path("/{type}/{name}")
     @SuppressWarnings("unchecked")
     public void create(
-            @PathParam("type") final Type type,
+            @PathParam("type") final NamedType type,
             @PathParam("name") final String name,
             final Optional<Configuration> configuration) {
         checkArgument(Component.class.isAssignableFrom(type.getType()), "Invalid component type.");
@@ -43,7 +43,7 @@ public class ComponentResource {
     @GET
     @Path("/{type}/{name}")
     public ComponentDescription get(
-            @PathParam("type") final Type type,
+            @PathParam("type") final NamedType type,
             @PathParam("name") final String name) {
         final Component<?> component = registry.asMap().get(name);
         if (component == null || !component.getClass().equals(type.getType())) {
