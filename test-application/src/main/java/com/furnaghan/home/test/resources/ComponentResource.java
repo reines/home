@@ -1,48 +1,61 @@
 package com.furnaghan.home.test.resources;
 
-import com.furnaghan.home.component.Components;
+import com.furnaghan.home.component.Component;
+import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
+import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.test.api.ComponentDescription;
 import com.furnaghan.home.test.api.Type;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.FluentIterable;
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import com.sun.jersey.api.NotFoundException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.Collection;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @Path("/components")
+@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ComponentResource {
 
-    private final ComponentList components;
+    private final ConfigurationStore store;
+    private final ComponentList registry;
 
-    public ComponentResource(final ComponentList components) {
-        this.components = components;
+    public ComponentResource(ConfigurationStore store, final ComponentList registry) {
+        this.store = store;
+        this.registry = registry;
+    }
+
+    @PUT
+    @Path("/{type}/{name}")
+    @SuppressWarnings("unchecked")
+    public void create(
+            @PathParam("type") final Type type,
+            @PathParam("name") final String name,
+            final Optional<Configuration> configuration) {
+        checkArgument(Component.class.isAssignableFrom(type.getType()), "Invalid component type.");
+        store.save((Class<Component>) type.getType(), name, configuration);
     }
 
     @GET
-    @Path("/registered")
-    public Map<String, ComponentDescription> listRegistered() {
-        return Maps.transformValues(components.asMap(), ComponentDescription::from);
+    @Path("/{type}/{name}")
+    public ComponentDescription get(
+            @PathParam("type") final Type type,
+            @PathParam("name") final String name) {
+        final Component<?> component = registry.asMap().get(name);
+        if (component == null || !component.getClass().equals(type.getType())) {
+            throw new NotFoundException("No such component.");
+        }
+
+        return ComponentDescription.from(component);
     }
 
     @GET
-    @Path("/all")
-    public Collection<ComponentDescription> listAll() {
-        return Collections2.transform(Components.discover(), ComponentDescription::from);
-    }
-
-    @GET
-    @Path("/all/types")
-    public Collection<Type> listAllTypes() {
-        return FluentIterable.from(Components.discover())
-                .transformAndConcat(Components::getComponentTypes)
-                .transform(Type::of)
-                .toSet();
+    @Path("/")
+    public Map<String, ComponentDescription> list() {
+        return Maps.transformValues(registry.asMap(), ComponentDescription::from);
     }
 }

@@ -1,3 +1,3 @@
-com.furnaghan.home.component.registry.store.ConfigurationStore
-com.furnaghan.home.policy.store.PolicyStore
-com.furnaghan.home.policy.store.ScriptStore
+com.furnaghan.home.component.registry.store.ConfigurationStoreFactory
+com.furnaghan.home.policy.store.PolicyStoreFactory
+com.furnaghan.home.policy.store.ScriptStoreFactory

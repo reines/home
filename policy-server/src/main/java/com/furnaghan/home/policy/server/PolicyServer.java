@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +28,7 @@ import static com.furnaghan.home.policy.server.EventListener.proxy;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-public class PolicyServer {
+public class PolicyServer implements PolicyList {
 
     private static final Logger logger = LoggerFactory.getLogger( PolicyServer.class );
 
@@ -51,6 +53,11 @@ public class PolicyServer {
 
         // Add a script manager - triggers scripts when appropriate
         listeners.add(scripts);
+    }
+
+    @Override
+    public Collection<Policy> list() {
+        return Collections.unmodifiableCollection(policies.keySet());
     }
 
     public synchronized boolean register(final Policy policy) {

@@ -1,8 +1,8 @@
 package com.furnaghan.home.policy.config;
 
-import com.furnaghan.home.component.registry.store.ConfigurationStore;
-import com.furnaghan.home.policy.store.PolicyStore;
-import com.furnaghan.home.policy.store.ScriptStore;
+import com.furnaghan.home.component.registry.store.ConfigurationStoreFactory;
+import com.furnaghan.home.policy.store.PolicyStoreFactory;
+import com.furnaghan.home.policy.store.ScriptStoreFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -15,31 +15,31 @@ public class PolicyServerConfiguration {
 
     @Valid
     @NotNull
-    private final ScriptStore scriptStore = null;
+    private final ScriptStoreFactory scriptStore = null;
 
     @Valid
     @NotNull
-    private final PolicyStore policyStore = null;
+    private final PolicyStoreFactory policyStore = null;
 
     @Valid
     @NotNull
-    private final ConfigurationStore configurationStore = null;
+    private final ConfigurationStoreFactory configurationStore = null;
 
     public int getThreads() {
         return threads;
     }
 
-    public ScriptStore getScriptStore()
+    public ScriptStoreFactory getScriptStore()
     {
         return scriptStore;
     }
 
-    public PolicyStore getPolicyStore()
+    public PolicyStoreFactory getPolicyStore()
     {
         return policyStore;
     }
 
-    public ConfigurationStore getConfigurationStore()
+    public ConfigurationStoreFactory getConfigurationStore()
     {
         return configurationStore;
     }

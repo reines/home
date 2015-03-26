@@ -13,4 +13,4 @@ logging:
   level: INFO
 
   loggers:
-    "com.furnaghan": TRACE
+    "com.furnaghan": DEBUG

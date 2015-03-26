@@ -3,12 +3,11 @@ package com.furnaghan.home.test;
 import com.furnaghan.home.component.clock.ClockType;
 import com.furnaghan.home.component.clock.system.SystemClockComponent;
 import com.furnaghan.home.component.clock.system.SystemClockConfiguration;
-import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.PolicyServerBundle;
-import com.furnaghan.home.policy.store.PolicyStore;
 import com.furnaghan.home.test.config.ConfiguredBundleWrapper;
 import com.furnaghan.home.test.config.TestApplicationConfiguration;
+import com.furnaghan.home.test.errors.IllegalArgumentExceptionMapper;
 import com.furnaghan.home.test.resources.ComponentResource;
 import com.furnaghan.home.test.resources.PolicyResource;
 import com.google.common.base.Optional;
@@ -35,16 +34,14 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
 
     @Override
     public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
-        final ConfigurationStore configurationStore = configuration.getPolicyServer().getConfigurationStore();
-        final PolicyStore policyStore = configuration.getPolicyServer().getPolicyStore();
-
         // TODO: remove, temp testing
-        configurationStore.save(SystemClockComponent.class, "test_clock",
+        policyBundle.getConfigurationStore().save(SystemClockComponent.class, "test_clock",
                 Optional.of(new SystemClockConfiguration(Duration.seconds(5))));
 
-        policyStore.save(new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
+        policyBundle.getPolicyStore().save(new Policy(ClockType.Listener.class, "tick", new Class<?>[]{Date.class}, "tick.py"));
 
-        environment.jersey().register(new ComponentResource(policyBundle.getComponentList()));
-        environment.jersey().register(new PolicyResource(policyStore));
+        environment.jersey().register(new IllegalArgumentExceptionMapper());
+        environment.jersey().register(new ComponentResource(policyBundle.getConfigurationStore(), policyBundle.getComponentList()));
+        environment.jersey().register(new PolicyResource(policyBundle.getPolicyStore(), policyBundle.getPolicyList()));
     }
 }

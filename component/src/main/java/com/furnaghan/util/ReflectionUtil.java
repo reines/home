@@ -134,6 +134,14 @@ public final class ReflectionUtil {
         return result.build();
     }
 
+    public static Optional<Class<?>> getClass(final String name) {
+        try {
+            return Optional.of(Class.forName(name));
+        } catch (ClassNotFoundException e) {
+            return Optional.absent();
+        }
+    }
+
     public static Optional<Method> getMethod(final Class<?> type, final String name, final Class<?>... parameterTypes) {
         return Optional.fromNullable(MethodUtils.getMatchingAccessibleMethod(type, name, parameterTypes));
     }
