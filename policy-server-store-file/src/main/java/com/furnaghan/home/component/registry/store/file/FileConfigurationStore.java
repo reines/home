@@ -9,6 +9,8 @@ import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class FileConfigurationStore extends ConfigurationStore {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FileConfigurationStore.class);
     private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
+    private static final String FILE_EXT = "json";
 
     private final File path;
 
@@ -36,12 +40,16 @@ public class FileConfigurationStore extends ConfigurationStore {
         return new File(path, getName(type));
     }
 
+    private File file(final File typeDir, final String name) {
+        return new File(typeDir, String.format("%s.%s", name, FILE_EXT));
+    }
+
     @Override
     public void save(final Class<? extends Component> componentType, final String name, final Optional<Configuration> configuration) {
         final File typeDir = typeDir(componentType);
         checkState(typeDir.isDirectory() || typeDir.mkdirs(), "Unable to create directory for type: " + typeDir.getAbsolutePath());
 
-        final File file = new File(typeDir, name);
+        final File file = file(typeDir, name);
         save(file, configuration);
         trigger(l -> l.onConfigurationAdded(componentType, name, configuration));
     }
@@ -49,7 +57,7 @@ public class FileConfigurationStore extends ConfigurationStore {
     @Override
     public boolean delete(final Class<? extends Component> componentType, final String name) {
         final File typeDir = typeDir(componentType);
-        final File file = new File(typeDir, name);
+        final File file = file(typeDir, name);
         if (file.exists()) {
             final Optional<Configuration> configuration = load(file, componentType);
             trigger(l -> l.onConfigurationRemoved(componentType, name, configuration));
@@ -63,6 +71,7 @@ public class FileConfigurationStore extends ConfigurationStore {
         try {
             JSON.writeValue(file, configuration);
         } catch (IOException e) {
+            LOG.warn("Failed to save configuration", e);
             throw Throwables.propagate(e);
         }
     }
@@ -85,6 +94,7 @@ public class FileConfigurationStore extends ConfigurationStore {
             });
             return result.build();
         } catch (IOException e) {
+            LOG.warn("Failed to load configuration", e);
             throw Throwables.propagate(e);
         }
     }
@@ -98,6 +108,7 @@ public class FileConfigurationStore extends ConfigurationStore {
 
             return Optional.absent();
         } catch (IOException e) {
+            LOG.warn("Failed to load configuration", e);
             throw Throwables.propagate(e);
         }
     }

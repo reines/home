@@ -1,0 +1,6 @@
+{
+  "type" : "com.furnaghan.home.component.meter.MeterType$Listener",
+  "event" : "receive",
+  "parameterTypes" : [ "java.lang.String", "double" ],
+  "script" : "metrics.py"
+}

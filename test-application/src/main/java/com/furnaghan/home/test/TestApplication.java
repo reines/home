@@ -25,7 +25,7 @@ public class TestApplication extends Application<TestApplicationConfiguration> {
     }
 
     @Override
-    public void run(final TestApplicationConfiguration configuration, final Environment environment) throws Exception {
+    public void run(final TestApplicationConfiguration configuration, final Environment environment) {
         environment.jersey().register(new IllegalArgumentExceptionMapper());
         environment.jersey().register(new ComponentResource(policyBundle.getConfigurationStore(), policyBundle.getComponentList()));
         environment.jersey().register(new PolicyResource(policyBundle.getPolicyStore(), policyBundle.getPolicyList()));

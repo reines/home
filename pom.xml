@@ -46,6 +46,8 @@
         <module>policy-server-store</module>
         <module>policy-server-store-file</module>
         <module>utils</module>
+        <module>component-metrics</module>
+        <module>component-metrics-statsd</module>
     </modules>
 
     <properties>

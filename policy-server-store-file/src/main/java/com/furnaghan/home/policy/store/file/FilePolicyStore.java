@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class FilePolicyStore extends PolicyStore {
 
     private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
+    private static final String FILE_EXT = "json";
     private static final HashFunction HASH_FUNCTION = Hashing.md5();
     private static final Funnel<Policy> POLICY_FUNNEL = new PolicyFunnel();
 
@@ -34,7 +35,7 @@ public class FilePolicyStore extends PolicyStore {
 
     private File policyFile(final Policy policy) {
         final HashCode hash = HASH_FUNCTION.hashObject(policy, POLICY_FUNNEL);
-        return new File(path, hash.toString());
+        return new File(path, String.format("%s.%s", hash, FILE_EXT));
     }
 
     @Override
