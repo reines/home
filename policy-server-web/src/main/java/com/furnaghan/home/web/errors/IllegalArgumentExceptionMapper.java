@@ -1,4 +1,4 @@
-package com.furnaghan.home.test.errors;
+package com.furnaghan.home.web.errors;
 
 import io.dropwizard.jersey.errors.ErrorMessage;
 

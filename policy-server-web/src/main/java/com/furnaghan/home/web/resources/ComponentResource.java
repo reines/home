@@ -1,11 +1,11 @@
-package com.furnaghan.home.test.resources;
+package com.furnaghan.home.web.resources;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
-import com.furnaghan.home.test.api.ComponentDescription;
 import com.furnaghan.home.util.NamedType;
+import com.furnaghan.home.web.api.ComponentDescription;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.NotFoundException;

@@ -1,4 +1,4 @@
-package com.furnaghan.home.test.config;
+package com.furnaghan.home.web.config;
 
 import com.furnaghan.home.policy.config.PolicyServerConfiguration;
 import io.dropwizard.Configuration;
@@ -6,7 +6,7 @@ import io.dropwizard.Configuration;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class TestApplicationConfiguration extends Configuration {
+public class PolicyServerWebConfiguration extends Configuration {
 
     @Valid
     @NotNull

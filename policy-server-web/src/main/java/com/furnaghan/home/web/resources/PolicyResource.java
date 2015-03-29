@@ -1,9 +1,9 @@
-package com.furnaghan.home.test.resources;
+package com.furnaghan.home.web.resources;
 
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.server.PolicyList;
 import com.furnaghan.home.policy.store.PolicyStore;
-import com.furnaghan.home.test.api.PolicyDescription;
+import com.furnaghan.home.web.api.PolicyDescription;
 import com.google.common.collect.Collections2;
 
 import javax.ws.rs.*;

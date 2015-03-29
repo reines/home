@@ -1,4 +1,4 @@
-package com.furnaghan.home.test.api;
+package com.furnaghan.home.web.api;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
