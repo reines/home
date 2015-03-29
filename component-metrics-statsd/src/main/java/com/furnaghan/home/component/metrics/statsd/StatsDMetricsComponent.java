@@ -7,6 +7,10 @@ import com.timgroup.statsd.StatsDClient;
 
 public class StatsDMetricsComponent extends Component<MetricsType.Listener> implements MetricsType {
 
+    private static String sanitize(final String name) {
+        return name.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("\\s", "_");
+    }
+
     private final StatsDClient statsd;
 
     public StatsDMetricsComponent(final StatsDMetricsConfiguration configuration) {
@@ -16,6 +20,6 @@ public class StatsDMetricsComponent extends Component<MetricsType.Listener> impl
 
     @Override
     public void send(final String name, final double value) {
-        statsd.gauge(name, value);
+        statsd.gauge(sanitize(name), value);
     }
 }
