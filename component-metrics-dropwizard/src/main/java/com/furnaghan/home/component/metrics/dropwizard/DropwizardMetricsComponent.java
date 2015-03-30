@@ -6,26 +6,18 @@ import com.codahale.metrics.SharedMetricRegistries;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.metrics.MetricsType;
 import com.furnaghan.home.util.AtomicGauge;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Maps;
 
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 public class DropwizardMetricsComponent extends Component<MetricsType.Listener> implements MetricsType {
 
     private final MetricRegistry registry;
-    private final Map<String, AtomicGauge<Double>> gauges;
+    private final ConcurrentMap<String, AtomicGauge<Double>> gauges;
 
     public DropwizardMetricsComponent(final DropwizardMetricsConfiguration configuration) {
         registry = SharedMetricRegistries.getOrCreate(configuration.getNamespace());
-
-        gauges = CacheBuilder.<String, AtomicGauge<Double>>newBuilder().build(new CacheLoader<String, AtomicGauge<Double>>() {
-            @Override
-            public AtomicGauge<Double> load(final String name) {
-                final AtomicGauge<Double> gauge = new AtomicGauge<>();
-                return registry.register(name, gauge);
-            }
-        }).asMap();
+        gauges = Maps.newConcurrentMap();
     }
 
     public MetricSet getMetrics() {
@@ -34,6 +26,6 @@ public class DropwizardMetricsComponent extends Component<MetricsType.Listener> 
 
     @Override
     public void send(final String name, final double value) {
-        gauges.get(name).set(value);
+        gauges.computeIfAbsent(name, key -> registry.register(key, new AtomicGauge<>())).set(value);
     }
 }
