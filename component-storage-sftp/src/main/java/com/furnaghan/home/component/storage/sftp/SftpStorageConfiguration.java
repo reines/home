@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.storage.sftp;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import com.google.common.net.HostAndPort;
@@ -10,27 +9,19 @@ import javax.validation.constraints.NotNull;
 
 public class SftpStorageConfiguration implements Configuration {
 
+    public static final int DEFAULT_SSH_PORT = 22;
+
     @NotNull
     @JsonProperty
-    private final HostAndPort address;
+    private HostAndPort address;
 
     @NotEmpty
     @JsonProperty
-    private final String username;
+    private String username;
 
     @NotEmpty
     @JsonProperty
-    private final String password;
-
-    @JsonCreator
-    public SftpStorageConfiguration(
-            @JsonProperty("address") final HostAndPort address,
-            @JsonProperty("username") final String username,
-            @JsonProperty("password") final String password) {
-        this.address = address;
-        this.username = username;
-        this.password = password;
-    }
+    private String password;
 
     public HostAndPort getAddress() {
         return address;

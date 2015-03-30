@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.email.imap;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import com.google.common.net.HostAndPort;
@@ -10,39 +9,28 @@ import javax.validation.constraints.NotNull;
 
 public class ImapConfiguration implements Configuration {
 
-    @NotNull
-    @JsonProperty
-    private final HostAndPort imapAddress;
+    public static final int DEFAULT_IMAP_PORT = 143;
+    public static final int DEFAULT_SMTP_PORT = 25;
 
     @NotNull
     @JsonProperty
-    private final HostAndPort smtpAddress;
+    private HostAndPort imapAddress;
+
+    @NotNull
+    @JsonProperty
+    private HostAndPort smtpAddress;
 
     @NotEmpty
     @JsonProperty
-    private final String username;
+    private String username;
 
     @NotEmpty
     @JsonProperty
-    private final String password;
+    private String password;
 
     @NotEmpty
     @JsonProperty
-    private final String emailAddress;
-
-    @JsonCreator
-    public ImapConfiguration(
-            @JsonProperty("imapAddress") final HostAndPort imapAddress,
-            @JsonProperty("smtpAddress") final HostAndPort smtpAddress,
-            @JsonProperty("username") final String username,
-            @JsonProperty("password") final String password,
-            @JsonProperty("emailAddress") final String emailAddress) {
-        this.imapAddress = imapAddress;
-        this.smtpAddress = smtpAddress;
-        this.username = username;
-        this.password = password;
-        this.emailAddress = emailAddress;
-    }
+    private String emailAddress;
 
     public HostAndPort getImapAddress() {
         return imapAddress;

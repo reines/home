@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.amp.onkyo;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import com.google.common.net.HostAndPort;
@@ -11,13 +10,7 @@ public class OnkyoConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty
-    private final HostAndPort address;
-
-    @JsonCreator
-    public OnkyoConfiguration(
-            @JsonProperty("address") final HostAndPort address) {
-        this.address = address;
-    }
+    private HostAndPort address;
 
     public HostAndPort getAddress() {
         return address;

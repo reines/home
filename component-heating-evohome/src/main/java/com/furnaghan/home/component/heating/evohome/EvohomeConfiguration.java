@@ -12,24 +12,15 @@ public class EvohomeConfiguration extends JerseyClientConfiguration implements C
 
     @NotEmpty
     @JsonProperty
-    private final String username;
+    private String username;
 
     @NotEmpty
     @JsonProperty
-    private final String password;
+    private String password;
 
     @NotNull
     @JsonProperty
-    private final Duration pollInterval;
-
-    public EvohomeConfiguration(
-            @JsonProperty("username") final String username,
-            @JsonProperty("password") final String password,
-            @JsonProperty("pollInterval") final Duration pollInterval) {
-        this.username = username;
-        this.password = password;
-        this.pollInterval = pollInterval;
-    }
+    private Duration pollInterval = Duration.minutes(1);
 
     public String getUsername() {
         return username;

@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.tv.bravia;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -13,19 +12,11 @@ public class BraviaConfiguration extends JerseyClientConfiguration implements Co
 
     @NotNull
     @JsonProperty
-    private final URI root;
+    private URI root;
 
     @NotEmpty
     @JsonProperty
-    private final String macAddress;
-
-    @JsonCreator
-    public BraviaConfiguration(
-            @JsonProperty("root") URI root,
-            @JsonProperty("macAddress") String macAddress) {
-        this.root = root;
-        this.macAddress = macAddress;
-    }
+    private String macAddress;
 
     public URI getUrl() {
         return root;

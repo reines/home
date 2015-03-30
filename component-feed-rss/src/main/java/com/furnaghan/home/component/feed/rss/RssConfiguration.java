@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.feed.rss;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -13,19 +12,11 @@ public class RssConfiguration extends JerseyClientConfiguration implements Confi
 
     @NotNull
     @JsonProperty
-    private final URI path;
+    private URI path;
 
     @NotNull
     @JsonProperty
-    private final Duration pollInterval;
-
-    @JsonCreator
-    public RssConfiguration(
-            @JsonProperty("path") final URI path,
-            @JsonProperty("pollInterval") final Duration pollInterval) {
-        this.path = path;
-        this.pollInterval = pollInterval;
-    }
+    private Duration pollInterval = Duration.minutes(15);
 
     public URI getPath() {
         return path;

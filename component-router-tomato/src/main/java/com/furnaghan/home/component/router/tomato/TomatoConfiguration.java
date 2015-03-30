@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.router.tomato;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -14,31 +13,19 @@ public class TomatoConfiguration extends JerseyClientConfiguration implements Co
 
     @NotNull
     @JsonProperty
-    private final URI root;
+    private URI root;
 
     @NotEmpty
     @JsonProperty
-    private final String username;
+    private String username = "root";
 
     @NotEmpty
     @JsonProperty
-    private final String password;
+    private String password;
 
     @NotNull
     @JsonProperty
-    private final Duration pollInterval;
-
-    @JsonCreator
-    public TomatoConfiguration(
-            @JsonProperty("root") final URI root,
-            @JsonProperty("username") final String username,
-            @JsonProperty("password") final String password,
-            @JsonProperty("pollInterval") final Duration pollInterval) {
-        this.root = root;
-        this.username = username;
-        this.password = password;
-        this.pollInterval = pollInterval;
-    }
+    private Duration pollInterval = Duration.seconds(5);
 
     public URI getRoot() {
         return root;

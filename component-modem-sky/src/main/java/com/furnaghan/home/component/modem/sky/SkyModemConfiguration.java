@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.modem.sky;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -12,25 +11,15 @@ import java.net.URI;
 public class SkyModemConfiguration extends JerseyClientConfiguration implements Configuration {
     @NotNull
     @JsonProperty
-    private final URI root;
+    private URI root = URI.create("http://192.168.1.1");
 
     @NotEmpty
     @JsonProperty
-    private final String username;
+    private String username = "admin";
 
     @NotEmpty
     @JsonProperty
-    private final String password;
-
-    @JsonCreator
-    public SkyModemConfiguration(
-            @JsonProperty("root") URI root,
-            @JsonProperty("username") String username,
-            @JsonProperty("password") String password) {
-        this.root = root;
-        this.username = username;
-        this.password = password;
-    }
+    private String password = "sky";
 
     public URI getRoot() {
         return root;

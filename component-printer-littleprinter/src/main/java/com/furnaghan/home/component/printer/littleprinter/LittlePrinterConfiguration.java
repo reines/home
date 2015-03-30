@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.printer.littleprinter;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -13,19 +12,11 @@ public class LittlePrinterConfiguration extends JerseyClientConfiguration implem
 
     @NotNull
     @JsonProperty
-    private final URI root;
+    private URI root;
 
     @NotEmpty
     @JsonProperty
-    private final String id;
-
-    @JsonCreator
-    public LittlePrinterConfiguration(
-            @JsonProperty("root") final URI root,
-            @JsonProperty("id") final String id) {
-        this.root = root;
-        this.id = id;
-    }
+    private String id;
 
     public URI getRoot() {
         return root;

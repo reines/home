@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.metrics.statsd;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import com.google.common.net.HostAndPort;
@@ -13,19 +12,11 @@ public class StatsDMetricsConfiguration implements Configuration {
 
     @NotNull
     @JsonProperty
-    private final String prefix;
+    private String prefix = "";
 
     @NotNull
     @JsonProperty
-    private final HostAndPort address;
-
-    @JsonCreator
-    public StatsDMetricsConfiguration(
-            @JsonProperty("prefix") final String prefix,
-            @JsonProperty("address") final HostAndPort address) {
-        this.prefix = prefix;
-        this.address = address;
-    }
+    private HostAndPort address;
 
     public String getPrefix() {
         return prefix;

@@ -1,6 +1,5 @@
 package com.furnaghan.home.component.torrent.deluge;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Configuration;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -13,19 +12,11 @@ public class DelugeConfiguration extends JerseyClientConfiguration implements Co
 
     @NotNull
     @JsonProperty
-    private final URI root;
+    private URI root;
 
     @NotNull
     @JsonProperty
-    private final Duration pollInterval;
-
-    @JsonCreator
-    public DelugeConfiguration(
-            @JsonProperty("root") final URI root,
-            @JsonProperty("pollInterval") final Duration pollInterval) {
-        this.root = root;
-        this.pollInterval = pollInterval;
-    }
+    private Duration pollInterval = Duration.seconds(5);
 
     public URI getRoot() {
         return root;

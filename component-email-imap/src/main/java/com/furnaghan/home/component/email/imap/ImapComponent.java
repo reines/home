@@ -33,14 +33,19 @@ public class ImapComponent extends Component<EmailType.Listener> implements Emai
         properties.put("mail.smtp.auth", true);
         properties.put("mail.smtp.starttls.enable", SMTP_TLS);
         properties.put("mail.smtp.host", configuration.getSmtpAddress().getHostText());
-        properties.put("mail.smtp.port", configuration.getSmtpAddress().getPort());
+        properties.put("mail.smtp.port", configuration.getSmtpAddress().getPortOrDefault(ImapConfiguration.DEFAULT_SMTP_PORT));
 
         from = configuration.getEmailAddress();
         session = Session.getInstance(properties, new PasswordAuthenticator(configuration.getUsername(), configuration.getPassword()));
 
         try {
             final Store imap = session.getStore(IMAP_PROTOCOL);
-            imap.connect(configuration.getImapAddress().getHostText(), configuration.getImapAddress().getPort(), configuration.getUsername(), configuration.getPassword());
+            imap.connect(
+                    configuration.getImapAddress().getHostText(),
+                    configuration.getImapAddress().getPortOrDefault(ImapConfiguration.DEFAULT_IMAP_PORT),
+                    configuration.getUsername(),
+                    configuration.getPassword()
+            );
 
             final IMAPFolder inbox = (IMAPFolder) imap.getFolder(INBOX_FOLDER);
             inbox.open(Folder.READ_ONLY);

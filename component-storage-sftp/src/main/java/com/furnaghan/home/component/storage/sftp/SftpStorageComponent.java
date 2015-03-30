@@ -23,7 +23,7 @@ public class SftpStorageComponent extends Component<StorageType.Listener> implem
             final Session session = new JSch().getSession(
                     configuration.getUsername(),
                     configuration.getAddress().getHostText(),
-                    configuration.getAddress().getPort()
+                    configuration.getAddress().getPortOrDefault(SftpStorageConfiguration.DEFAULT_SSH_PORT)
             );
             session.setUserInfo(new PasswordUserInfo(configuration.getPassword()));
             session.setConfig("StrictHostKeyChecking", "no");
