@@ -6,15 +6,13 @@ import com.furnaghan.home.component.Components;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.util.Listenable;
 import com.google.common.base.Optional;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -31,11 +29,11 @@ public class ComponentRegistry extends Listenable<ComponentRegistry.Listener> im
     private static final Logger logger = LoggerFactory.getLogger(ComponentRegistry.class);
 
     private final Map<String, Component<?>> componentsByName;
-    private final Multimap<Class<? extends ComponentType>, Component<?>> componentsByType;
+    private final Table<Class<? extends ComponentType>, String, Component<?>> componentsByType;
 
     public ComponentRegistry() {
         componentsByName = Maps.newConcurrentMap();
-        componentsByType = HashMultimap.create();
+        componentsByType = HashBasedTable.create();
     }
 
     @Override
@@ -45,9 +43,9 @@ public class ComponentRegistry extends Listenable<ComponentRegistry.Listener> im
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends ComponentType> Collection<T> getByType(final Class<T> type) {
+    public <T extends ComponentType> Map<String, T> getByType(final Class<T> type) {
         checkNotNull(type, "Component type cannot be null");
-        return Collections.unmodifiableCollection(Collections2.transform(componentsByType.get(type), type::cast));
+        return Collections.unmodifiableMap(Maps.transformValues(componentsByType.row(type), type::cast));
     }
 
     @SuppressWarnings("unchecked")
@@ -69,7 +67,7 @@ public class ComponentRegistry extends Listenable<ComponentRegistry.Listener> im
             logger.info("Loaded {} '{}'", getName(componentType), name);
 
             componentsByName.put(name, component);
-            Components.getComponentTypes(component.getClass()).forEach(type -> componentsByType.put(type, component));
+            Components.getComponentTypes(component.getClass()).forEach(type -> componentsByType.put(type, name, component));
             trigger(l -> l.onComponentAdded(name, component));
 
             return Optional.of(component);

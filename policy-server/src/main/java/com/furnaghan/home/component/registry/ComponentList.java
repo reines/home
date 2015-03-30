@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface ComponentList {
     Map<String, Component<?>> asMap();
-    <T extends ComponentType> Collection<T> getByType(final Class<T> type);
+    <T extends ComponentType> Map<String, T> getByType(final Class<T> type);
     <T extends ComponentType> Optional<T> getByName(final String name);
 }
