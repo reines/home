@@ -13,7 +13,7 @@ public class JsonClientFilter extends ClientFilter {
     private static final MediaType REPLACE_TYPE = new MediaType("application", "x-json");
 
     @Override
-    public ClientResponse handle(ClientRequest clientRequest) throws ClientHandlerException {
+    public ClientResponse handle(final ClientRequest clientRequest) throws ClientHandlerException {
         final ClientResponse clientResponse = getNext().handle(clientRequest);
 
         if (REPLACE_TYPE.equals(clientResponse.getType())) {

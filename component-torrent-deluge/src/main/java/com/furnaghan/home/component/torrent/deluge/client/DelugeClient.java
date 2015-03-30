@@ -13,13 +13,17 @@ import com.furnaghan.home.component.torrent.deluge.client.filter.JsonClientFilte
 import com.furnaghan.home.component.torrent.deluge.client.model.Stats;
 import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.net.HostAndPort;
 import com.sun.jersey.api.client.Client;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.util.Duration;
+import org.apache.http.client.utils.URIBuilder;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,15 +31,30 @@ import java.util.concurrent.ScheduledExecutorService;
 // http://deluge-torrent.org/docs/master/modules/ui/web/json_api.html
 public class DelugeClient implements Managed {
 
+    public static final int DEFAULT_PORT = 8112;
+
+    private static URI createUri(final String scheme, final HostAndPort address, final String path) {
+        try {
+            return new URIBuilder()
+                    .setScheme(scheme)
+                    .setHost(address.getHostText())
+                    .setPort(address.getPortOrDefault(DEFAULT_PORT))
+                    .setPath(path)
+                    .build();
+        } catch (URISyntaxException e) {
+            throw Throwables.propagate(e);
+        }
+    }
+
     private final Client client;
     private final URI root;
     private final Duration pollInterval;
     private final StateManager stateManager;
     private final ScheduledExecutorService executor;
 
-    public DelugeClient(final Client client, final URI root, final Duration pollInterval) {
+    public DelugeClient(final Client client, final HostAndPort address, final Duration pollInterval) {
         this.client = client;
-        this.root = root;
+        this.root = createUri("http", address, "/json");
         this.pollInterval = pollInterval;
 
         // Fix the returned content type so we can parse correctly
