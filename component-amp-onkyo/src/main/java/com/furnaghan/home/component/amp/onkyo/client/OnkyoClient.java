@@ -10,6 +10,14 @@ import java.io.IOException;
 // https://github.com/compbrain/Onkyo-TX-NR708-Control/blob/master/eiscp/commands.py
 public class OnkyoClient {
 
+    public static OnkyoClient autodiscover() {
+        try {
+            return new OnkyoClient(EiscpConnector.autodiscover());
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
+        }
+    }
+
     private final EiscpConnector connector;
 
     public OnkyoClient(final HostAndPort address) {
@@ -18,6 +26,10 @@ public class OnkyoClient {
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
+    }
+
+    private OnkyoClient(final EiscpConnector connector) {
+        this.connector = connector;
     }
 
     public void addListener(final CommandListener listener) {

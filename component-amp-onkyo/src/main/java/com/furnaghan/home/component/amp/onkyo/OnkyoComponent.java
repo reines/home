@@ -5,7 +5,9 @@ import com.furnaghan.home.component.amp.AmpType;
 import com.furnaghan.home.component.amp.model.Source;
 import com.furnaghan.home.component.amp.onkyo.client.OnkyoClient;
 import com.furnaghan.home.component.amp.onkyo.client.model.Input;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.net.HostAndPort;
 import de.csmp.jeiscp.eiscp.EiscpCommmandsConstants;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,7 +24,8 @@ public class OnkyoComponent extends Component<AmpType.Listener> implements AmpTy
     private final OnkyoClient client;
 
     public OnkyoComponent(final OnkyoConfiguration configuration) {
-        client = new OnkyoClient(configuration.getAddress());
+        final Optional<HostAndPort> address = configuration.getAddress();
+        client = address.isPresent() ? new OnkyoClient(address.get()) : OnkyoClient.autodiscover();
         client.addListener((command, value) -> {
             switch (command) {
                 case EiscpCommmandsConstants.MASTER_VOLUME_ISCP: {
