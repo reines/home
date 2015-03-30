@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DelugeTorrent {
+public class Torrent {
 
     @JsonProperty
     private final int maxDownloadSpeed;
@@ -42,7 +42,7 @@ public class DelugeTorrent {
     private final String name;
 
     @JsonCreator
-    public DelugeTorrent(
+    public Torrent(
             @JsonProperty("max_download_speed") int maxDownloadSpeed,
             @JsonProperty("upload_payload_rate") int uploadPayloadRate,
             @JsonProperty("download_payload_rate") int downloadPayloadRate,
@@ -116,7 +116,7 @@ public class DelugeTorrent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DelugeTorrent that = (DelugeTorrent) o;
+        Torrent that = (Torrent) o;
 
         if (downloadPayloadRate != that.downloadPayloadRate) return false;
         if (maxDownloadSpeed != that.maxDownloadSpeed) return false;

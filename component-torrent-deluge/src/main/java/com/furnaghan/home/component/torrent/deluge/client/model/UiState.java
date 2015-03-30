@@ -17,13 +17,13 @@ public class UiState {
     private final Stats stats;
 
     @JsonProperty
-    private final Map<String, DelugeTorrent> torrents;
+    private final Map<String, Torrent> torrents;
 
     @JsonCreator
     public UiState(
             @JsonProperty("connected") boolean connected,
             @JsonProperty("stats") Stats stats,
-            @JsonProperty("torrents") Map<String, DelugeTorrent> torrents) {
+            @JsonProperty("torrents") Map<String, Torrent> torrents) {
         this.connected = connected;
         this.stats = stats;
         this.torrents = torrents;
@@ -37,7 +37,7 @@ public class UiState {
         return stats;
     }
 
-    public Map<String, DelugeTorrent> getTorrents() {
+    public Map<String, Torrent> getTorrents() {
         return torrents;
     }
 

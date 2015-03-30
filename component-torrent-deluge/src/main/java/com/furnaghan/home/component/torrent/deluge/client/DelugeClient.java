@@ -10,6 +10,8 @@ import com.furnaghan.home.component.torrent.deluge.client.api.commands.UpdateUiC
 import com.furnaghan.home.component.torrent.deluge.client.api.results.StringResult;
 import com.furnaghan.home.component.torrent.deluge.client.api.results.UiStateResult;
 import com.furnaghan.home.component.torrent.deluge.client.filter.JsonClientFilter;
+import com.furnaghan.home.component.torrent.deluge.client.model.Stats;
+import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
 import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
@@ -18,6 +20,7 @@ import io.dropwizard.util.Duration;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -87,7 +90,15 @@ public class DelugeClient implements Managed {
         sendCommand(new AddTorrentCommand(ImmutableList.of(localPath)));
     }
 
-    public UiState getUiState() {
+    public Map<String, Torrent> getTorrents() {
+        return stateManager.getTorrents();
+    }
+
+    public Stats getStats() {
+        return stateManager.getStats();
+    }
+
+    protected UiState getUiState() {
         return sendCommand(new UpdateUiCommand(), UiStateResult.class);
     }
 }

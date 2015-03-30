@@ -1,6 +1,6 @@
 package com.furnaghan.home.component.torrent.deluge.client;
 
-import com.furnaghan.home.component.torrent.deluge.client.model.DelugeTorrent;
+import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.Stats;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
 import com.furnaghan.home.util.Listenable;
@@ -20,7 +20,7 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
     private final DelugeClient client;
 
     private Stats stats;
-    private Map<String, DelugeTorrent> torrents;
+    private Map<String, Torrent> torrents;
 
     public StateManager(DelugeClient client) {
         this.client = client;
@@ -66,11 +66,11 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         return stats;
     }
 
-    public Map<String, DelugeTorrent> getTorrents() {
+    public Map<String, Torrent> getTorrents() {
         return Collections.unmodifiableMap(torrents);
     }
 
-    private synchronized void onTorrentAdded(String hash, DelugeTorrent torrent) {
+    private synchronized void onTorrentAdded(String hash, Torrent torrent) {
         LOG.trace("Torrent {} added", torrent);
 
         // It was added
@@ -80,7 +80,7 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         onTorrentStateChanged(hash, torrent);
     }
 
-    private synchronized void onTorrentUpdated(String hash, DelugeTorrent previous, DelugeTorrent updated) {
+    private synchronized void onTorrentUpdated(String hash, Torrent previous, Torrent updated) {
         LOG.trace("Torrent {} updated", updated);
 
         // The state was changed
@@ -89,13 +89,13 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         }
     }
 
-    private synchronized void onTorrentStateChanged(String hash, DelugeTorrent torrent) {
+    private synchronized void onTorrentStateChanged(String hash, Torrent torrent) {
         LOG.trace("Torrent {} state changed", torrent);
 
         trigger(l -> l.onTorrentStateChanged(hash, torrent));
     }
 
-    private synchronized void onTorrentRemoved(String hash, DelugeTorrent torrent) {
+    private synchronized void onTorrentRemoved(String hash, Torrent torrent) {
         LOG.trace("Torrent {} removed", torrent);
 
         // It was removed
