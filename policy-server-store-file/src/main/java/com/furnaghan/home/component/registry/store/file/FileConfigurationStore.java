@@ -87,10 +87,12 @@ public class FileConfigurationStore extends ConfigurationStore {
             final ImmutableList.Builder<Optional<Configuration>> result = ImmutableList.builder();
             Files.list(typeDir.toPath()).forEach(path -> {
                 final File file = path.toFile();
-                final Optional<Configuration> configuration = load(file, componentType);
+                if (file.getName().endsWith("." + FILE_EXT)) {
+                    final Optional<Configuration> configuration = load(file, componentType);
 
-                trigger(l -> l.onConfigurationAdded(componentType, file.getName(), configuration));
-                result.add(configuration);
+                    trigger(l -> l.onConfigurationAdded(componentType, file.getName(), configuration));
+                    result.add(configuration);
+                }
             });
             return result.build();
         } catch (IOException e) {
