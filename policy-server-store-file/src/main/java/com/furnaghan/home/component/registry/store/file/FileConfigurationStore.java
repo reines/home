@@ -6,6 +6,7 @@ import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.util.JsonUtils;
 import com.furnaghan.home.util.ReflectionUtil;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
@@ -28,6 +29,7 @@ public class FileConfigurationStore extends ConfigurationStore {
     private static final Logger LOG = LoggerFactory.getLogger(FileConfigurationStore.class);
     private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
     private static final String FILE_EXT = "json";
+    private static final Function<String, String> STRIP_FILE_EXT = name -> name.substring(0, name.length() - (FILE_EXT.length() + 1));
 
     private final File path;
 
@@ -87,10 +89,11 @@ public class FileConfigurationStore extends ConfigurationStore {
             final ImmutableList.Builder<Optional<Configuration>> result = ImmutableList.builder();
             Files.list(typeDir.toPath()).forEach(path -> {
                 final File file = path.toFile();
-                if (file.getName().endsWith("." + FILE_EXT)) {
+                final String name = file.getName();
+                if (name.endsWith("." + FILE_EXT)) {
                     final Optional<Configuration> configuration = load(file, componentType);
 
-                    trigger(l -> l.onConfigurationAdded(componentType, file.getName(), configuration));
+                    trigger(l -> l.onConfigurationAdded(componentType, STRIP_FILE_EXT.apply(name), configuration));
                     result.add(configuration);
                 }
             });
