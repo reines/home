@@ -9,22 +9,13 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>component-email-imap</artifactId>
-
-    <properties>
-        <javamail.version>1.5.2</javamail.version>
-    </properties>
+    <artifactId>type-meter</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>type-email</artifactId>
+            <artifactId>component</artifactId>
             <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>${javamail.version}</version>
         </dependency>
     </dependencies>
 </project>

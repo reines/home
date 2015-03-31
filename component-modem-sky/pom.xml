@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-modem</artifactId>
+            <artifactId>type-modem</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

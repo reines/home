@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-feed</artifactId>
+            <artifactId>type-feed</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-meter</artifactId>
+            <artifactId>type-meter</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

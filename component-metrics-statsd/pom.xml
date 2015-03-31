@@ -11,16 +11,20 @@
 
     <artifactId>component-metrics-statsd</artifactId>
 
+    <properties>
+        <statsd-client.version>3.1.0</statsd-client.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-metrics</artifactId>
+            <artifactId>type-metrics</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.timgroup</groupId>
             <artifactId>java-statsd-client</artifactId>
-            <version>3.1.0</version>
+            <version>${statsd-client.version}</version>
         </dependency>
     </dependencies>
 </project>

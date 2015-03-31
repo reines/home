@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-router</artifactId>
+            <artifactId>type-router</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

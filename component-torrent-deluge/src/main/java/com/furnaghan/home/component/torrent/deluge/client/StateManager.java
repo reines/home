@@ -1,7 +1,7 @@
 package com.furnaghan.home.component.torrent.deluge.client;
 
-import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.Stats;
+import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
 import com.furnaghan.home.util.Listenable;
 import com.google.common.collect.Sets;

@@ -3,7 +3,6 @@ package com.furnaghan.home.policy;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.furnaghan.home.component.Component;
-import com.furnaghan.home.script.Script;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

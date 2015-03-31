@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-amp</artifactId>
+            <artifactId>type-amp</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

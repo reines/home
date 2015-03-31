@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-calendar</artifactId>
+            <artifactId>type-calendar</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

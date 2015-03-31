@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-clock</artifactId>
+            <artifactId>type-clock</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

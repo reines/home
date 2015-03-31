@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-metrics</artifactId>
+            <artifactId>type-metrics</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

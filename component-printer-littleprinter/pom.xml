@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.furnaghan.home</groupId>
-            <artifactId>component-printer</artifactId>
+            <artifactId>type-printer</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
