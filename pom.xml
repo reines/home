@@ -52,6 +52,7 @@
         <module>policy-server-store-file</module>
         <module>policy-server-web</module>
         <module>utils</module>
+        <module>component-mediaplayer</module>
     </modules>
 
     <properties>
