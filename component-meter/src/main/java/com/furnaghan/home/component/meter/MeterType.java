@@ -4,7 +4,7 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.ComponentType;
 
 public interface MeterType extends ComponentType {
-    public static interface Listener extends Component.Listener {
+    interface Listener extends Component.Listener {
         void receive(final String name, final double value);
     }
 }

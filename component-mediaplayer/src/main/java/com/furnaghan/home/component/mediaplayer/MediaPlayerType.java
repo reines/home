@@ -4,7 +4,7 @@ import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.ComponentType;
 
 public interface MediaPlayerType extends ComponentType {
-    public static interface Listener extends Component.Listener {
+    interface Listener extends Component.Listener {
         void onPlay(final String path);
         void onPause(final String path);
         void onStop(final String path);
