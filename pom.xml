@@ -53,6 +53,7 @@
         <module>policy-server-web</module>
         <module>utils</module>
         <module>component-mediaplayer</module>
+        <module>component-medialibrary</module>
     </modules>
 
     <properties>
