@@ -31,6 +31,7 @@
         <module>component-modem-sky</module>
         <module>component-notificationsource</module>
         <module>component-notifier</module>
+        <module>component-notifier-logging</module>
         <module>component-printer</module>
         <module>component-printer-littleprinter</module>
         <module>component-router</module>
