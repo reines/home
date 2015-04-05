@@ -9,7 +9,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>component-heating-evohome</artifactId>
+    <artifactId>component-evohome</artifactId>
 
     <properties>
         <evohome-client.version>0.1-SNAPSHOT</evohome-client.version>

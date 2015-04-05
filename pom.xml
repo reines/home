@@ -16,13 +16,13 @@
         <module>component-clock-system</module>
         <module>component-email-imap</module>
         <module>component-feed-rss</module>
-        <module>component-heating-evohome</module>
+        <module>component-evohome</module>
         <module>component-meter-currentcost</module>
         <module>component-metrics-dropwizard</module>
         <module>component-metrics-statsd</module>
         <module>component-modem-sky</module>
         <module>component-notifier-logging</module>
-        <module>component-printer-littleprinter</module>
+        <module>component-littleprinter</module>
         <module>component-router-tomato</module>
         <module>component-storage-local</module>
         <module>component-storage-sftp</module>
@@ -58,12 +58,15 @@
         <module>type-tv</module>
 
         <module>utils</module>
+        <module>component-xbmc</module>
     </modules>
 
     <properties>
         <jdk.version>1.8</jdk.version>
 
         <dropwizard.version>0.7.1</dropwizard.version>
+
+        <hamcrest.version>1.3</hamcrest.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -122,6 +125,21 @@
             <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-testing</artifactId>
+            <version>${dropwizard.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

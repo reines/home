@@ -9,7 +9,7 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>component-printer-littleprinter</artifactId>
+    <artifactId>component-littleprinter</artifactId>
 
     <dependencies>
         <dependency>
