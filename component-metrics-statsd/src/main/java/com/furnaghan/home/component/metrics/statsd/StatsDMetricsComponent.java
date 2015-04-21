@@ -22,4 +22,9 @@ public class StatsDMetricsComponent extends Component<MetricsType.Listener> impl
     public void send(final String name, final double value) {
         statsd.gauge(sanitize(name), value);
     }
+
+    @Override
+    public void mark(final String name) {
+        statsd.increment(name);
+    }
 }

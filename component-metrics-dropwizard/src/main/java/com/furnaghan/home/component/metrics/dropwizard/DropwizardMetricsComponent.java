@@ -28,4 +28,9 @@ public class DropwizardMetricsComponent extends Component<MetricsType.Listener> 
     public void send(final String name, final double value) {
         gauges.computeIfAbsent(name, key -> registry.register(key, new AtomicGauge<>())).set(value);
     }
+
+    @Override
+    public void mark(final String name) {
+        registry.meter(name).mark();
+    }
 }

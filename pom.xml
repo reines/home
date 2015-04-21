@@ -59,6 +59,8 @@
 
         <module>utils</module>
         <module>component-xbmc</module>
+        <module>type-test</module>
+        <module>component-ping</module>
     </modules>
 
     <properties>
