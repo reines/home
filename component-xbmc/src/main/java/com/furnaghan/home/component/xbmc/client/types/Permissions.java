@@ -1,7 +1,7 @@
 package com.furnaghan.home.component.xbmc.client.types;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 public class Permissions {
 
@@ -98,7 +98,7 @@ public class Permissions {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("readData", readData)
                 .add("removeData", removeData)
                 .add("updateData", updateData)

@@ -9,5 +9,4 @@ public interface MetricsType extends ComponentType {
     }
 
     void send(final String name, final double value);
-    void mark(final String name);
 }

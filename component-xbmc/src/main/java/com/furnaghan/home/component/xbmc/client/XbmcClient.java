@@ -6,8 +6,9 @@ import com.furnaghan.home.component.xbmc.client.methods.remote.JSONRPC;
 import com.furnaghan.home.component.xbmc.client.methods.remote.Player;
 import com.furnaghan.home.component.xbmc.client.types.Version;
 import com.google.common.net.HostAndPort;
-import com.jamierf.jsonrpc.JsonRpcServer;
-import com.jamierf.jsonrpc.SocketTransport;
+import com.jamierf.jsonrpc.JsonRpcClient;
+import com.jamierf.jsonrpc.codec.jackson.JacksonCodecFactory;
+import com.jamierf.jsonrpc.transport.socket.SocketTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class XbmcClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XbmcClient.class);
 
-    private final JsonRpcServer rpc;
+    private final JsonRpcClient rpc;
 
     // Remote Interfaces
     private final JSONRPC jsonrpc;
@@ -28,7 +29,10 @@ public class XbmcClient {
     private final Version version;
 
     public XbmcClient(final HostAndPort address) throws IOException {
-        rpc = new JsonRpcServer(new SocketTransport(address));
+        rpc = JsonRpcClient.builder(
+                SocketTransport.withAddress(address).build(),
+                new JacksonCodecFactory()
+        ).build();
 
         jsonrpc = rpc.proxy("JSONRPC", JSONRPC.class);
         application = rpc.proxy("Application", Application.class);

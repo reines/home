@@ -19,15 +19,18 @@
         <module>component-evohome</module>
         <module>component-meter-currentcost</module>
         <module>component-metrics-dropwizard</module>
+        <module>component-metrics-librato</module>
         <module>component-metrics-statsd</module>
         <module>component-modem-sky</module>
         <module>component-notifier-logging</module>
+        <module>component-ping</module>
         <module>component-littleprinter</module>
         <module>component-router-tomato</module>
         <module>component-storage-local</module>
         <module>component-storage-sftp</module>
         <module>component-torrent-deluge</module>
         <module>component-tv-bravia</module>
+        <module>component-xbmc</module>
 
         <module>policy</module>
         <module>policy-script</module>
@@ -58,15 +61,13 @@
         <module>type-tv</module>
 
         <module>utils</module>
-        <module>component-xbmc</module>
-        <module>type-test</module>
-        <module>component-ping</module>
     </modules>
 
     <properties>
         <jdk.version>1.8</jdk.version>
 
         <dropwizard.version>0.7.1</dropwizard.version>
+        <guava.version>18.0</guava.version>
 
         <hamcrest.version>1.3</hamcrest.version>
 

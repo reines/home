@@ -12,8 +12,8 @@
     <artifactId>component-calendar-google</artifactId>
 
     <properties>
-        <google-calendar.version>v3-rev95-1.19.0</google-calendar.version>
-        <google-oauth.version>v2-rev78-1.19.0</google-oauth.version>
+        <google-calendar.version>v3-rev122-1.20.0</google-calendar.version>
+        <google-oauth.version>v2-rev90-1.20.0</google-oauth.version>
         <quartz.verison>2.2.1</quartz.verison>
     </properties>
 
@@ -39,6 +39,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava-jdk5</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
