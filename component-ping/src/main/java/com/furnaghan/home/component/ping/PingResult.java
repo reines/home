@@ -1,11 +1,12 @@
 package com.furnaghan.home.component.ping;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import io.dropwizard.util.Duration;
 import io.dropwizard.util.Size;
 
 public class PingResult {
+
+    public static final PingResult NO_RESPONSE = new PingResult(Duration.milliseconds(0), 0, Size.bytes(0));
 
     private final Duration time;
     private final int ttl;

@@ -29,10 +29,15 @@ public class PingComponent extends Component<PingComponent.Listener> implements 
     private void ping() {
         try {
             final PingResult result = pinger.ping(InetAddress.getByName(address));
-            trigger(l -> l.receive("time", result.getTime().toMicroseconds() / 1000D));
+            report(result);
             trigger(l -> l.success(result));
         } catch (Exception e) {
+            report(PingResult.NO_RESPONSE);
             trigger(l -> l.failure(e));
         }
+    }
+
+    private void report(final PingResult result) {
+        trigger(l -> l.receive("time", result.getTime().toMicroseconds() / 1000D));
     }
 }

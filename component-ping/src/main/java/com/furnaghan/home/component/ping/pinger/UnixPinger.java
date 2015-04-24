@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkState;
 public abstract class UnixPinger implements Pinger {
 
     private static final Pattern RESULT_PATTERN = Pattern.compile(
-            "(?<size>\\d+) bytes from.*ttl=(?<ttl>\\d+).*time=(?<time>\\d*\\.\\d*) ms",
+            "(?<size>\\d+) bytes from.*ttl=(?<ttl>\\d+).*time=(?<time>\\d*(?:\\.\\d*)?) ms",
             Pattern.DOTALL | Pattern.MULTILINE);
 
     private static String readStream(final InputStream stream) throws IOException {
