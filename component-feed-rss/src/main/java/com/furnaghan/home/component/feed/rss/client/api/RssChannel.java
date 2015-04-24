@@ -3,6 +3,7 @@ package com.furnaghan.home.component.feed.rss.client.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.Set;
@@ -34,7 +35,7 @@ public class RssChannel {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("title", title)
                 .add("description", description)
                 .add("items", items)

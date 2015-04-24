@@ -1,6 +1,6 @@
-package com.furnaghan.home.component.ping;
+package com.furnaghan.home.component.ping.pinger;
 
-import com.google.common.collect.ImmutableList;
+import com.furnaghan.home.component.ping.PingResult;
 import com.google.common.io.CharStreams;
 import io.dropwizard.util.Duration;
 import io.dropwizard.util.Size;
@@ -16,20 +16,11 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class UnixPinger implements Pinger {
+public abstract class UnixPinger implements Pinger {
 
     private static final Pattern RESULT_PATTERN = Pattern.compile(
             "(?<size>\\d+) bytes from.*ttl=(?<ttl>\\d+).*time=(?<time>\\d*\\.\\d*) ms",
             Pattern.DOTALL | Pattern.MULTILINE);
-
-    private static List<String> command(final InetAddress address, final Duration timeout) {
-        return ImmutableList.of(
-                "ping",
-                "-c", "1",
-                "-t", String.valueOf(timeout.toSeconds()),
-                address.getHostAddress()
-        );
-    }
 
     private static String readStream(final InputStream stream) throws IOException {
         try (final Reader reader = new InputStreamReader(stream)) {
@@ -54,6 +45,8 @@ public class UnixPinger implements Pinger {
 
         return parse(readStream(process.getInputStream()));
     }
+
+    protected abstract List<String> command(final InetAddress address, final Duration timeout);
 
     private void handleError(final String error) throws IOException {
         if (error.startsWith("invalid")) {

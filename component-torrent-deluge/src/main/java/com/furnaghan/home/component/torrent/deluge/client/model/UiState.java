@@ -3,6 +3,7 @@ package com.furnaghan.home.component.torrent.deluge.client.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.Map;
@@ -43,7 +44,7 @@ public class UiState {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("connected", connected)
                 .add("stats", stats)
                 .add("torrents", torrents)

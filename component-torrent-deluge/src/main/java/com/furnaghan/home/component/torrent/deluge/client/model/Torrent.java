@@ -3,6 +3,7 @@ package com.furnaghan.home.component.torrent.deluge.client.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -154,7 +155,7 @@ public class Torrent {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("maxDownloadSpeed", maxDownloadSpeed)
                 .add("uploadPayloadRate", uploadPayloadRate)
                 .add("downloadPayloadRate", downloadPayloadRate)

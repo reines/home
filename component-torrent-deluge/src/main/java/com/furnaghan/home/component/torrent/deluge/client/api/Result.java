@@ -2,6 +2,7 @@ package com.furnaghan.home.component.torrent.deluge.client.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Result<T> {
@@ -39,7 +40,7 @@ public class Result<T> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("id", id)
                 .add("result", result)
                 .add("error", error)

@@ -2,6 +2,7 @@ package com.furnaghan.home.component.torrent.deluge.client.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class Command {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("method", method)
                 .add("params", params)
                 .add("id", id)

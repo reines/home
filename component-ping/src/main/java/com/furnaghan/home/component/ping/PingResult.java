@@ -1,5 +1,6 @@
 package com.furnaghan.home.component.ping;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.dropwizard.util.Duration;
 import io.dropwizard.util.Size;
@@ -30,7 +31,7 @@ public class PingResult {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("time", time)
                 .add("ttl", ttl)
                 .add("size", size)

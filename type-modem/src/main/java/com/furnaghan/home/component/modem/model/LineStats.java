@@ -1,6 +1,7 @@
 package com.furnaghan.home.component.modem.model;
 
 import com.furnaghan.home.util.Speed;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class LineStats {
@@ -47,7 +48,7 @@ public class LineStats {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("downstreamSpeed", downstreamSpeed)
                 .add("downstreamAttenuation", downstreamAttenuation)
                 .add("downstreamNoiseMargin", downstreamNoiseMargin)

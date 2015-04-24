@@ -2,6 +2,8 @@ package com.furnaghan.home.component.ping;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.meter.MeterType;
+import com.furnaghan.home.component.ping.pinger.GNUPinger;
+import com.furnaghan.home.component.ping.pinger.Pinger;
 
 import java.net.InetAddress;
 import java.util.concurrent.Executors;
@@ -18,7 +20,7 @@ public class PingComponent extends Component<PingComponent.Listener> implements 
 
     public PingComponent(final PingConfiguration configuration) {
         this.address = configuration.getAddress();
-        this.pinger = new UnixPinger(configuration.getTimeout());
+        this.pinger = new GNUPinger(configuration.getTimeout());
 
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(this::ping, 0,
                 configuration.getFrequency().getQuantity(), configuration.getFrequency().getUnit());

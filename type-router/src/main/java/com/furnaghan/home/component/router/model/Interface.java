@@ -1,5 +1,6 @@
 package com.furnaghan.home.component.router.model;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class Interface {
@@ -34,7 +35,7 @@ public class Interface {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("bytes", bytes)
                     .add("packets", packets)
                     .add("errors", errors)
@@ -61,7 +62,7 @@ public class Interface {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("receive", receive)
                 .add("transmit", transmit)
                 .toString();
