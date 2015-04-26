@@ -9,37 +9,16 @@ import com.google.common.base.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Torrent {
 
-    @JsonProperty
     private final int maxDownloadSpeed;
-
-    @JsonProperty
     private final int uploadPayloadRate;
-
-    @JsonProperty
     private final int downloadPayloadRate;
-
-    @JsonProperty
     private final int numPeers;
-
-    @JsonProperty
     private final double ratio;
-
-    @JsonProperty
     private final int totalPeers;
-
-    @JsonProperty
     private final long totalSize;
-
-    @JsonProperty
     private final int maxUploadSpeed;
-
-    @JsonProperty
     private final String savePath;
-
-    @JsonProperty
     private final State state;
-
-    @JsonProperty
     private final String name;
 
     @JsonCreator

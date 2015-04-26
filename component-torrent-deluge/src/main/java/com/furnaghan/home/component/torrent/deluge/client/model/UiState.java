@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.hash.HashCode;
 
 import java.util.Map;
 
@@ -18,13 +19,13 @@ public class UiState {
     private final Stats stats;
 
     @JsonProperty
-    private final Map<String, Torrent> torrents;
+    private final Map<HashCode, Torrent> torrents;
 
     @JsonCreator
     public UiState(
             @JsonProperty("connected") boolean connected,
             @JsonProperty("stats") Stats stats,
-            @JsonProperty("torrents") Map<String, Torrent> torrents) {
+            @JsonProperty("torrents") Map<HashCode, Torrent> torrents) {
         this.connected = connected;
         this.stats = stats;
         this.torrents = torrents;
@@ -38,7 +39,7 @@ public class UiState {
         return stats;
     }
 
-    public Map<String, Torrent> getTorrents() {
+    public Map<HashCode, Torrent> getTorrents() {
         return torrents;
     }
 

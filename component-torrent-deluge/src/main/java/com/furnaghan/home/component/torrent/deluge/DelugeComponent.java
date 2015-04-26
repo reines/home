@@ -6,14 +6,20 @@ import com.furnaghan.home.component.torrent.deluge.client.DelugeClient;
 import com.furnaghan.home.component.torrent.deluge.client.StateListener;
 import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.util.JerseyClientFactory;
+import com.google.common.hash.HashCode;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Set;
 
 public class DelugeComponent extends Component<TorrentType.Listener> implements TorrentType {
 
     private final DelugeClient client;
 
     public DelugeComponent(final DelugeConfiguration configuration) {
+        configuration.setGzipEnabledForRequests(false);
+        configuration.setCookiesEnabled(true);
+
         client = new DelugeClient(
                 JerseyClientFactory.build("deluge-" + configuration.getAddress(), configuration),
                 configuration.getAddress(),
@@ -21,17 +27,17 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
         );
         client.addStateListener(new StateListener() {
             @Override
-            public void onTorrentAdded(final String hash, final Torrent torrent) {
+            public void onTorrentAdded(final HashCode hash, final Torrent torrent) {
                 trigger((listener) -> listener.torrentAdded(hash));
             }
 
             @Override
-            public void onTorrentRemoved(final String hash, final Torrent torrent) {
+            public void onTorrentRemoved(final HashCode hash, final Torrent torrent) {
                 trigger((listener) -> listener.torrentRemoved(hash));
             }
 
             @Override
-            public void onTorrentStateChanged(final String hash, final Torrent torrent) {
+            public void onTorrentStateChanged(final HashCode hash, final Torrent torrent) {
                 switch (torrent.getState()) {
                     case Paused:
                         trigger((listener) -> listener.torrentPaused(hash));
@@ -47,6 +53,11 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
         });
         client.login(configuration.getPassword());
         client.start();
+    }
+
+    @Override
+    public Set<HashCode> getTorrents() {
+        return Collections.unmodifiableSet(client.getTorrents().keySet());
     }
 
     @Override

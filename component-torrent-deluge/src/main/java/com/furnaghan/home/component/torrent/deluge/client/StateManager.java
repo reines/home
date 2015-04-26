@@ -5,6 +5,7 @@ import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
 import com.furnaghan.home.util.Listenable;
 import com.google.common.collect.Sets;
+import com.google.common.hash.HashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
     private final DelugeClient client;
 
     private Stats stats;
-    private Map<String, Torrent> torrents;
+    private Map<HashCode, Torrent> torrents;
 
     public StateManager(DelugeClient client) {
         this.client = client;
@@ -30,27 +31,27 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try {
             final UiState latestState = client.getUiState();
 
             LOG.trace("Received server state update, connected={}", latestState.isConnected());
 
             // Torrents which have been added
-            final Set<String> added = Sets.difference(latestState.getTorrents().keySet(), torrents.keySet());
-            for (String hash : added) {
+            final Set<HashCode> added = Sets.difference(latestState.getTorrents().keySet(), torrents.keySet());
+            for (HashCode hash : added) {
                 onTorrentAdded(hash, latestState.getTorrents().get(hash));
             }
 
             // Torrents which have been updated
-            final Set<String> updated = Sets.intersection(latestState.getTorrents().keySet(), torrents.keySet());
-            for (String hash : updated) {
+            final Set<HashCode> updated = Sets.intersection(latestState.getTorrents().keySet(), torrents.keySet());
+            for (HashCode hash : updated) {
                 onTorrentUpdated(hash, torrents.get(hash), latestState.getTorrents().get(hash));
             }
 
             // Torrents which have been removed
-            final Set<String> removed = Sets.difference(torrents.keySet(), latestState.getTorrents().keySet());
-            for (String hash : removed) {
+            final Set<HashCode> removed = Sets.difference(torrents.keySet(), latestState.getTorrents().keySet());
+            for (HashCode hash : removed) {
                 onTorrentRemoved(hash, torrents.get(hash));
             }
 
@@ -66,11 +67,11 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         return stats;
     }
 
-    public Map<String, Torrent> getTorrents() {
+    public Map<HashCode, Torrent> getTorrents() {
         return Collections.unmodifiableMap(torrents);
     }
 
-    private synchronized void onTorrentAdded(String hash, Torrent torrent) {
+    private synchronized void onTorrentAdded(HashCode hash, Torrent torrent) {
         LOG.trace("Torrent {} added", torrent);
 
         // It was added
@@ -80,7 +81,7 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         onTorrentStateChanged(hash, torrent);
     }
 
-    private synchronized void onTorrentUpdated(String hash, Torrent previous, Torrent updated) {
+    private synchronized void onTorrentUpdated(HashCode hash, Torrent previous, Torrent updated) {
         LOG.trace("Torrent {} updated", updated);
 
         // The state was changed
@@ -89,13 +90,13 @@ public class StateManager extends Listenable<StateListener> implements Runnable 
         }
     }
 
-    private synchronized void onTorrentStateChanged(String hash, Torrent torrent) {
+    private synchronized void onTorrentStateChanged(HashCode hash, Torrent torrent) {
         LOG.trace("Torrent {} state changed", torrent);
 
         trigger(l -> l.onTorrentStateChanged(hash, torrent));
     }
 
-    private synchronized void onTorrentRemoved(String hash, Torrent torrent) {
+    private synchronized void onTorrentRemoved(HashCode hash, Torrent torrent) {
         LOG.trace("Torrent {} removed", torrent);
 
         // It was removed

@@ -15,6 +15,7 @@ import com.furnaghan.home.component.torrent.deluge.client.model.Torrent;
 import com.furnaghan.home.component.torrent.deluge.client.model.UiState;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.hash.HashCode;
 import com.google.common.net.HostAndPort;
 import com.sun.jersey.api.client.Client;
 import io.dropwizard.lifecycle.Managed;
@@ -66,7 +67,8 @@ public class DelugeClient implements Managed {
 
     @Override
     public void start() {
-        executor.scheduleWithFixedDelay(stateManager, 0, pollInterval.getQuantity(), pollInterval.getUnit());
+        stateManager.run();
+        executor.scheduleWithFixedDelay(stateManager, pollInterval.getQuantity(), pollInterval.getQuantity(), pollInterval.getUnit());
     }
 
     public void addStateListener(final StateListener listener) {
@@ -109,7 +111,7 @@ public class DelugeClient implements Managed {
         sendCommand(new AddTorrentCommand(ImmutableList.of(localPath)));
     }
 
-    public Map<String, Torrent> getTorrents() {
+    public Map<HashCode, Torrent> getTorrents() {
         return stateManager.getTorrents();
     }
 
