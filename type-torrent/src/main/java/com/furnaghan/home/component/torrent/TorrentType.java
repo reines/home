@@ -2,12 +2,13 @@ package com.furnaghan.home.component.torrent;
 
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.ComponentType;
+import com.furnaghan.home.component.torrent.api.Torrent;
 import com.google.common.hash.HashCode;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.Map;
 
-public interface TorrentType extends ComponentType {
+public interface TorrentType<T extends Torrent> extends ComponentType {
     interface Listener extends Component.Listener {
         void torrentAdded(final HashCode hash);
         void torrentRemoved(final HashCode hash);
@@ -16,6 +17,6 @@ public interface TorrentType extends ComponentType {
         void torrentFinished(final HashCode hash);
     }
 
-    Set<HashCode> getTorrents();
+    Map<HashCode, T> getTorrents();
     void download(final URI path);
 }

@@ -4,44 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stats {
 
     public static final Stats DEFAULT = new Stats(0, 0, 0, 0, false, 0, 0, 0, 0, 0, 0);
 
-    @JsonProperty
     private final int dhtNodes;
-
-    @JsonProperty
     private final int downloadProtocolRate;
-
-    @JsonProperty
     private final int downloadRate;
-
-    @JsonProperty
     private final long freeSpace;
-
-    @JsonProperty
     private final boolean hasIncomingConnections;
-
-    @JsonProperty
     private final int maxDownload;
-
-    @JsonProperty
     private final int maxNumConnections;
-
-    @JsonProperty
     private final int maxUpload;
-
-    @JsonProperty
     private final int numConnections;
-
-    @JsonProperty
     private final int uploadProtocolRate;
-
-    @JsonProperty
     private final int uploadRate;
 
     @JsonCreator

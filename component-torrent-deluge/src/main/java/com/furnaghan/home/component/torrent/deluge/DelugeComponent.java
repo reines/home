@@ -10,9 +10,9 @@ import com.google.common.hash.HashCode;
 
 import java.net.URI;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 
-public class DelugeComponent extends Component<TorrentType.Listener> implements TorrentType {
+public class DelugeComponent extends Component<TorrentType.Listener> implements TorrentType<Torrent> {
 
     private final DelugeClient client;
 
@@ -39,13 +39,13 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
             @Override
             public void onTorrentStateChanged(final HashCode hash, final Torrent torrent) {
                 switch (torrent.getState()) {
-                    case Paused:
+                    case PAUSED:
                         trigger((listener) -> listener.torrentPaused(hash));
                         break;
-                    case Seeding:
+                    case SEEDING:
                         trigger((listener) -> listener.torrentFinished(hash));
                         break;
-                    case Downloading:
+                    case DOWNLOADING:
                         trigger((listener) -> listener.torrentResumed(hash));
                         break;
                 }
@@ -56,8 +56,8 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
     }
 
     @Override
-    public Set<HashCode> getTorrents() {
-        return Collections.unmodifiableSet(client.getTorrents().keySet());
+    public Map<HashCode, Torrent> getTorrents() {
+        return Collections.unmodifiableMap(client.getTorrents());
     }
 
     @Override

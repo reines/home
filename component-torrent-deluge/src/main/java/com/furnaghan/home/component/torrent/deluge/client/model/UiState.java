@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.hash.HashCode;
 
 import java.util.Map;
@@ -12,13 +11,8 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UiState {
 
-    @JsonProperty
     private final boolean connected;
-
-    @JsonProperty
     private final Stats stats;
-
-    @JsonProperty
     private final Map<HashCode, Torrent> torrents;
 
     @JsonCreator
