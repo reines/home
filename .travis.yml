@@ -1,0 +1,15 @@
+language: java
+jdk:
+  - oraclejdk8
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - secure: "YPIUteO15otzY8jYZ7DyUCWBjcFskpIyIFssz6CwxbNqyxJED4FFMb+7y0JIK4qCKNPBlZ12n2B8rlRXm83vROy6w6yYST1J309JT+DBW8yUAR/daBK2J35BeAToPPY/SgE/cZJfXg6rDnkILxyaYI2KOPCzCJWPbXm41aVU0l4="
+    - secure: "P3CfbUsk1R+wqmdO9k10ku/q3olPvxS/x4ysHejmcdGtjyGn2wUlZHxsVWcaboI8nTjzMPoeSqw7J02HWrqlmdbhvKrtynF2ZoGnHQr1Bek1gmDE2E70ID2fRwzKMHDlUpc6gZqVBN1p7UHPMpD5LDD3YxJqVcwso5BiOfugk9s="
+
+after_success:
+  - mvn deploy --settings settings.xml
