@@ -104,28 +104,38 @@ public final class ReflectionUtil {
     }
 
     @SuppressWarnings("unchecked")
+    private static <T> Class<T> getClass( Type type ) {
+        if (type instanceof Class) {
+            return (Class<T>) type;
+        }
+        if (type instanceof ParameterizedType) {
+            return getClass(((ParameterizedType) type).getRawType());
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
     public static <U> Set<Class<U>> getAssignableTypes(final Type[] types, final Class<?> from) {
         final ImmutableSet.Builder<Class<U>> result = ImmutableSet.builder();
         for (final Type type : types) {
-            if (from.equals(type)) {
+            final Class<U> typeClass = getClass(type);
+            if (from.equals(typeClass)) {
                 continue;
             }
 
             // This class inherits from the desired type
-            if (from.isAssignableFrom((Class<?>) type)) {
-                final Class<U> target = (Class<U>) type;
-
+            if (from.isAssignableFrom(typeClass)) {
                 // Add this class
-                result.add(target);
+                result.add(typeClass);
 
                 // Add any superclass
-                final Type superclasses = target.getGenericSuperclass();
+                final Type superclasses = typeClass.getGenericSuperclass();
                 if (superclasses != null) {
                     result.addAll(getAssignableTypes(new Type[]{superclasses}, from));
                 }
 
                 // Add any interfaces
-                final Type[] interfaces = target.getGenericInterfaces();
+                final Type[] interfaces = typeClass.getGenericInterfaces();
                 if (interfaces.length > 0) {
                     result.addAll(getAssignableTypes(interfaces, from));
                 }
