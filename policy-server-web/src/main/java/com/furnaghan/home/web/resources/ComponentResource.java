@@ -35,11 +35,11 @@ public class ComponentResource {
     @PUT
     @Path("/{type}/{name}")
     @SuppressWarnings("unchecked")
-    public void create(
+    public void put(
             @PathParam("type") final NamedType type,
             @PathParam("name") final String name,
             final Optional<Configuration> configuration) {
-        checkArgument(Component.class.isAssignableFrom(type.getType()), "Invalid component type.");
+        checkArgument(type.isTypeOf(Component.class), "Invalid component type.");
         store.save((Class<Component>) type.getType(), name, configuration);
     }
 
@@ -62,10 +62,8 @@ public class ComponentResource {
     public Optional<Configuration> getConfiguration(
             @PathParam("type") final NamedType type,
             @PathParam("name") final String name) {
-        if (!type.isTypeOf(Component.class)) {
-            throw new IllegalArgumentException("type must extend Component.");
-        }
-        return store.load((Class<? extends Component>) type.getType(), name);
+        checkArgument(type.isTypeOf(Component.class), "Invalid component type.");
+        return store.load((Class<Component>) type.getType(), name);
     }
 
     @GET

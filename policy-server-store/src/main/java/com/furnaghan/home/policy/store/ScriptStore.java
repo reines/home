@@ -13,4 +13,6 @@ public abstract class ScriptStore {
     public Optional<CharSource> load(final String name) {
         return open(name).transform(source -> source.asCharSource(StandardCharsets.UTF_8));
     }
+
+    public abstract void save(final String name, final CharSource source);
 }
