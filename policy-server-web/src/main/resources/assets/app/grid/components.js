@@ -34,7 +34,7 @@ var ComponentsGrid = Backgrid.Grid.extend({
             fromRaw: function(rawValue, model) {
                 return $("<a>", {
                     tabIndex: -1,
-                    href: 'http://localhost:7072/components/' + model.get('type').type + '/' + model.get('title') + '/config.json'
+                    href: '/components/' + model.get('type').type + '/' + model.get('title') + '/config.json'
                 }).text(rawValue)[0].outerHTML;
             }
         })

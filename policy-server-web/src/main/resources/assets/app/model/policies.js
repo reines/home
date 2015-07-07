@@ -23,5 +23,5 @@ var Policy = Backbone.Model.extend({
 
 var Policies = Backbone.Collection.extend({
     model: Policy,
-    url: '/assets/data/policies.json' // TODO: use correct resource
+    url: '/policies'
 });

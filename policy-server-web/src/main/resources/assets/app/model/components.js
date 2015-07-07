@@ -28,7 +28,7 @@ var Component = Backbone.Model.extend({
 
 var Components = Backbone.Collection.extend({
     model: Component,
-    url: '/assets/data/components.json', // TODO: use correct resource
+    url: '/components',
     parse: function(response) {
         return _.pairs(response);
     }
@@ -53,5 +53,5 @@ var ComponentType = Backbone.Model.extend({
 
 var ComponentTypes = Backbone.Collection.extend({
     model: ComponentType,
-    url: '/assets/data/component_types.json' // TODO: use correct resource
+    url: '/components/types'
 });

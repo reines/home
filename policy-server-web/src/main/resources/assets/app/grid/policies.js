@@ -8,7 +8,7 @@ var PoliciesGrid = Backgrid.Grid.extend({
             fromRaw: function(rawValue, model) {
                 return $("<a>", {
                     tabIndex: -1,
-                    href: 'http://localhost:7072/scripts/' + rawValue
+                    href: '/scripts/' + rawValue
                 }).text(rawValue)[0].outerHTML;
             }
         })
