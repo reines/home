@@ -1,17 +1,20 @@
 package com.furnaghan.home.web.resources;
 
 import com.furnaghan.home.component.Component;
+import com.furnaghan.home.component.Components;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
 import com.furnaghan.home.util.NamedType;
 import com.furnaghan.home.web.api.ComponentDescription;
 import com.google.common.base.Optional;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.NotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -54,7 +57,25 @@ public class ComponentResource {
     }
 
     @GET
+    @Path("/{type}/{name}/config.json")
+    @SuppressWarnings("unchecked")
+    public Optional<Configuration> getConfiguration(
+            @PathParam("type") final NamedType type,
+            @PathParam("name") final String name) {
+        if (!type.isTypeOf(Component.class)) {
+            throw new IllegalArgumentException("type must extend Component.");
+        }
+        return store.load((Class<? extends Component>) type.getType(), name);
+    }
+
+    @GET
     public Map<String, ComponentDescription> list() {
         return Maps.transformValues(registry.asMap(), ComponentDescription::from);
+    }
+
+    @GET
+    @Path("/types")
+    public Collection<ComponentDescription> listAvailableTypes() {
+        return Collections2.transform(Components.discover(), ComponentDescription::from);
     }
 }

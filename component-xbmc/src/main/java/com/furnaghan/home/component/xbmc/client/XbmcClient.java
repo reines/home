@@ -1,10 +1,7 @@
 package com.furnaghan.home.component.xbmc.client;
 
-import com.furnaghan.home.component.xbmc.client.methods.remote.Application;
-import com.furnaghan.home.component.xbmc.client.methods.remote.GUI;
-import com.furnaghan.home.component.xbmc.client.methods.remote.JSONRPC;
-import com.furnaghan.home.component.xbmc.client.methods.remote.Player;
-import com.furnaghan.home.component.xbmc.client.types.Version;
+import com.furnaghan.home.component.xbmc.client.methods.remote.*;
+import com.furnaghan.home.component.xbmc.client.types.api.jsonrpc.Version;
 import com.google.common.net.HostAndPort;
 import com.jamierf.jsonrpc.JsonRpcClient;
 import com.jamierf.jsonrpc.codec.jackson.JacksonCodecFactory;
@@ -25,6 +22,7 @@ public class XbmcClient {
     private final Application application;
     private final GUI gui;
     private final Player player;
+    private final VideoLibrary videoLibrary;
 
     private final Version version;
 
@@ -38,6 +36,7 @@ public class XbmcClient {
         application = rpc.proxy("Application", Application.class);
         gui = rpc.proxy("GUI", GUI.class);
         player = rpc.proxy("Player", Player.class);
+        videoLibrary = rpc.proxy("VideoLibrary", VideoLibrary.class);
 
         version = jsonrpc.Version().get("version");
         LOGGER.info("Connected to XBMC APIv{}", version);
@@ -53,19 +52,23 @@ public class XbmcClient {
         rpc.register(namespace, instance, type);
     }
 
-    public JSONRPC JSONRPC() {
+    public JSONRPC jsonRpc() {
         return jsonrpc;
     }
 
-    public Application Application() {
+    public Application application() {
         return application;
     }
 
-    public GUI GUI() {
+    public GUI gui() {
         return gui;
     }
 
-    public Player Player() {
+    public Player player() {
         return player;
+    }
+
+    public VideoLibrary videoLibrary() {
+        return videoLibrary;
     }
 }

@@ -1,11 +1,14 @@
-package com.furnaghan.home.component.xbmc.client.types;
+package com.furnaghan.home.component.xbmc.client.types.player.notifications;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Player {
 
+    @JsonProperty("playerid")
     private final int id;
+
+    @JsonProperty
     private final int speed;
 
     @JsonCreator
@@ -16,7 +19,6 @@ public class Player {
         this.speed = speed;
     }
 
-    @JsonProperty("playerid")
     public int getId() {
         return id;
     }

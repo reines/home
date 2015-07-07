@@ -33,4 +33,8 @@ public class NamedType {
     public String getName() {
         return name;
     }
+
+    public boolean isTypeOf(final Class<?> target) {
+        return !type.isAssignableFrom(target);
+    }
 }

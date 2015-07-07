@@ -1,9 +1,9 @@
-package com.furnaghan.home.component.xbmc.client.types;
+package com.furnaghan.home.component.xbmc.client.types.api.jsonrpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 
-public class Permissions {
+public class Permission {
 
     @JsonProperty("ReadData")
     private boolean readData;

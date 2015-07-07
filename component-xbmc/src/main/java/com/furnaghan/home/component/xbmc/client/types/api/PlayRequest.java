@@ -1,8 +1,13 @@
-package com.furnaghan.home.component.xbmc.client.types;
+package com.furnaghan.home.component.xbmc.client.types.api;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PlayRequest {
 
+    @JsonProperty
     private final String path;
+
+    @JsonProperty
     private final boolean recursive;
 
     public PlayRequest(final String path, final boolean recursive) {

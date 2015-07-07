@@ -1,0 +1,34 @@
+[
+  {
+    "name": {
+      "type": "com.furnaghan.home.component.feed.rss.RssComponent",
+      "name": "RssComponent"
+    },
+    "types": [
+      {
+        "type": "com.furnaghan.home.component.feed.FeedType",
+        "name": "FeedType"
+      }
+    ],
+    "configuration": {
+      "type": "com.furnaghan.home.component.feed.rss.RssConfiguration",
+      "name": "RssConfiguration"
+    }
+  },
+  {
+    "name": {
+      "type": "com.furnaghan.home.component.clock.system.SystemClockComponent",
+      "name": "SystemClockComponent"
+    },
+    "types": [
+      {
+        "type": "com.furnaghan.home.component.clock.ClockType",
+        "name": "ClockType"
+      }
+    ],
+    "configuration": {
+      "type": "com.furnaghan.home.component.clock.system.SystemClockConfiguration",
+      "name": "SystemClockConfiguration"
+    }
+  }
+]

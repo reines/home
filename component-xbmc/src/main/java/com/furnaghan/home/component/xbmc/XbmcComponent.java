@@ -8,10 +8,10 @@ import com.furnaghan.home.component.xbmc.client.XbmcClient;
 import com.furnaghan.home.component.xbmc.client.methods.local.Application;
 import com.furnaghan.home.component.xbmc.client.methods.local.Player;
 import com.furnaghan.home.component.xbmc.client.methods.local.VideoLibrary;
-import com.furnaghan.home.component.xbmc.client.types.PlayRequest;
-import com.furnaghan.home.component.xbmc.client.types.PlayerNotificationsData;
-import com.furnaghan.home.component.xbmc.client.types.PlayerStopData;
-import com.furnaghan.home.component.xbmc.client.types.VolumeData;
+import com.furnaghan.home.component.xbmc.client.types.api.PlayRequest;
+import com.furnaghan.home.component.xbmc.client.types.player.notifications.Data;
+import com.furnaghan.home.component.xbmc.client.types.api.PlayerStopData;
+import com.furnaghan.home.component.xbmc.client.types.api.VolumeData;
 import com.furnaghan.home.util.JsonUtils;
 import com.google.common.collect.Range;
 
@@ -49,20 +49,20 @@ public class XbmcComponent extends Component<XbmcComponent.Listener> implements 
 
         client.register(new Player() {
             @Override
-            public void OnPause(final String sender, final PlayerNotificationsData data) {
-                final String path = data.getItem().get("title");
+            public void OnPause(final String sender, final Data data) {
+                final String path = (String) data.getItem().get("title");
                 trigger(l -> l.onPause(path));
             }
 
             @Override
-            public void OnPlay(final String sender, final PlayerNotificationsData data) {
-                final String path = data.getItem().get("title");
+            public void OnPlay(final String sender, final Data data) {
+                final String path = (String) data.getItem().get("title");
                 trigger(l -> l.onPlay(path));
             }
 
             @Override
             public void OnStop(final String sender, final PlayerStopData data) {
-                final String path = data.getItem().get("title");
+                final String path = (String) data.getItem().get("title");
                 trigger(l -> l.onStop(path));
             }
         }, Player.class);
@@ -87,23 +87,23 @@ public class XbmcComponent extends Component<XbmcComponent.Listener> implements 
     public void setVolume(final int volume) {
         checkArgument(VOLUME_RANGE.contains(volume), "Volume must within range " + VOLUME_RANGE);
 
-        final int result = client.Application().SetVolume(volume);
+        final int result = client.application().SetVolume(volume);
         checkState(result == volume, String.format(
                 "Failed to set volume to requested level, requested %d but was %d", volume, result));
     }
 
     @Override
     public void play(final String path) {
-        client.Player().Open(new PlayRequest(path, true));
+        client.player().Open(new PlayRequest(path, true));
     }
 
     @Override
     public void stop() {
-        client.Player().Stop(PLAYER_VIDEO);
+        client.player().Stop(PLAYER_VIDEO);
     }
 
     @Override
     public void send(final String title, final String message) {
-        client.GUI().ShowNotification(title, message);
+        client.gui().ShowNotification(title, message);
     }
 }

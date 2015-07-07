@@ -10,5 +10,6 @@ import java.util.Collection;
 public abstract class ConfigurationStore extends Listenable<ConfigurationStoreListener> {
     public abstract void save(final Class<? extends Component> type, final String name, final Optional<Configuration> configuration);
     public abstract boolean delete(final Class<? extends Component> componentType, final String name);
-    public abstract Collection<Optional<Configuration>> load(Class<? extends Component> componentType);
+    public abstract Collection<Optional<Configuration>> load(final Class<? extends Component> componentType);
+    public abstract Optional<Configuration> load(final Class<? extends Component> componentType, final String name);
 }

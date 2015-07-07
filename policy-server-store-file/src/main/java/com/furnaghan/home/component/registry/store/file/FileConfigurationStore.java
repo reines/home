@@ -61,7 +61,9 @@ public class FileConfigurationStore extends ConfigurationStore {
         final File typeDir = typeDir(componentType);
         final File file = file(typeDir, name);
         if (file.exists()) {
-            final Optional<Configuration> configuration = load(file, componentType);
+            final Optional<Configuration> configuration = load(componentType, name);
+            file.delete();
+
             trigger(l -> l.onConfigurationRemoved(componentType, name, configuration));
             return true;
         }
@@ -89,11 +91,11 @@ public class FileConfigurationStore extends ConfigurationStore {
             final ImmutableList.Builder<Optional<Configuration>> result = ImmutableList.builder();
             Files.list(typeDir.toPath()).forEach(path -> {
                 final File file = path.toFile();
-                final String name = file.getName();
-                if (name.endsWith("." + FILE_EXT)) {
-                    final Optional<Configuration> configuration = load(file, componentType);
+                if (file.getName().endsWith("." + FILE_EXT)) {
+                    final String name = STRIP_FILE_EXT.apply(file.getName());
+                    final Optional<Configuration> configuration = load(componentType, name);
 
-                    trigger(l -> l.onConfigurationAdded(componentType, STRIP_FILE_EXT.apply(name), configuration));
+                    trigger(l -> l.onConfigurationAdded(componentType, name, configuration));
                     result.add(configuration);
                 }
             });
@@ -104,8 +106,14 @@ public class FileConfigurationStore extends ConfigurationStore {
         }
     }
 
-    private Optional<Configuration> load(final File file, final Class<? extends Component> componentType) {
+    @Override
+    public Optional<Configuration> load(final Class<? extends Component> componentType, final String name) {
         try {
+            final File file = new File(typeDir(componentType), name + "." + FILE_EXT);
+            if (!file.exists()) {
+                return Optional.absent();
+            }
+
             final Optional<Class<Configuration>> configurationType = getConfigurationType(componentType);
             if (configurationType.isPresent()) {
                 return JSON.readValue(file, ReflectionUtil.createTypeReference(Optional.class, configurationType.get()));
