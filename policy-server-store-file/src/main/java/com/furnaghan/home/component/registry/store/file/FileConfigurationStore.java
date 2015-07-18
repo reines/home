@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
-import com.furnaghan.home.util.JsonUtils;
+import com.furnaghan.home.util.JsonUtil;
 import com.furnaghan.home.util.ReflectionUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkState;
 public class FileConfigurationStore extends ConfigurationStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileConfigurationStore.class);
-    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
+    private static final ObjectMapper JSON = JsonUtil.newObjectMapper();
     private static final String FILE_EXT = "json";
     private static final Function<String, String> STRIP_FILE_EXT = name -> name.substring(0, name.length() - (FILE_EXT.length() + 1));
 

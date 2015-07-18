@@ -1,10 +1,12 @@
 package com.furnaghan.home.web.resources;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.furnaghan.home.component.Component;
 import com.furnaghan.home.component.Components;
 import com.furnaghan.home.component.Configuration;
 import com.furnaghan.home.component.registry.ComponentList;
 import com.furnaghan.home.component.registry.store.ConfigurationStore;
+import com.furnaghan.home.util.JsonUtil;
 import com.furnaghan.home.util.NamedType;
 import com.furnaghan.home.web.api.ComponentDescription;
 import com.google.common.base.Optional;
@@ -64,6 +66,16 @@ public class ComponentResource {
             @PathParam("name") final String name) {
         checkArgument(type.isTypeOf(Component.class), "Invalid component type.");
         return store.load((Class<Component>) type.getType(), name);
+    }
+
+    @GET
+    @Path("/{type}/config_schema.json")
+    @SuppressWarnings("unchecked")
+    public Optional<JsonSchema> getConfigurationSchema(
+            @PathParam("type") final NamedType type) {
+        checkArgument(type.isTypeOf(Component.class), "Invalid component type.");
+        return Components.getConfigurationType((Class<Component>) type.getType())
+                .transform(JsonUtil::getSchema);
     }
 
     @GET

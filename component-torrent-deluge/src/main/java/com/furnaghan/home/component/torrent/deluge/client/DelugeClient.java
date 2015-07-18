@@ -48,13 +48,15 @@ public class DelugeClient implements Managed {
     }
 
     private final Client client;
+    private final String password;
     private final URI root;
     private final Duration pollInterval;
     private final StateManager stateManager;
     private final ScheduledExecutorService executor;
 
-    public DelugeClient(final Client client, final HostAndPort address, final Duration pollInterval) {
+    public DelugeClient(final Client client, final HostAndPort address, final Duration pollInterval, final String password) {
         this.client = client;
+        this.password = password;
         this.root = createUri("http", address, "/json");
         this.pollInterval = pollInterval;
 
@@ -67,6 +69,8 @@ public class DelugeClient implements Managed {
 
     @Override
     public void start() {
+        sendCommand(new LoginCommand(password));
+
         stateManager.run();
         executor.scheduleWithFixedDelay(stateManager, pollInterval.getQuantity(), pollInterval.getQuantity(), pollInterval.getUnit());
     }
@@ -97,10 +101,6 @@ public class DelugeClient implements Managed {
         }
 
         return result.getResult();
-    }
-
-    public void login(final String password) {
-        sendCommand(new LoginCommand(password));
     }
 
     public String downloadTorrent(final URI torrent) {

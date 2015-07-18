@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.furnaghan.home.policy.Policy;
 import com.furnaghan.home.policy.store.PolicyStore;
 import com.furnaghan.home.policy.util.PolicyFunnel;
-import com.furnaghan.home.util.JsonUtils;
+import com.furnaghan.home.util.JsonUtil;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Funnel;
@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class FilePolicyStore extends PolicyStore {
 
-    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
+    private static final ObjectMapper JSON = JsonUtil.newObjectMapper();
     private static final String FILE_EXT = "json";
     private static final HashFunction HASH_FUNCTION = Hashing.md5();
     private static final Funnel<Policy> POLICY_FUNNEL = new PolicyFunnel();

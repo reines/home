@@ -3,7 +3,7 @@ package com.furnaghan.util;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SharedMetricRegistries;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.furnaghan.home.util.JsonUtils;
+import com.furnaghan.home.util.JsonUtil;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import io.dropwizard.client.JerseyClientBuilder;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class JerseyClientFactory {
 
     private static final MetricRegistry METRICS_REGISTRY = SharedMetricRegistries.getOrCreate("furnaghan-home");
-    private static final ObjectMapper JSON = JsonUtils.newObjectMapper();
+    private static final ObjectMapper JSON = JsonUtil.newObjectMapper();
 
     public static Client build(final String name, final JerseyClientConfiguration configuration) {
         return build(name, configuration, Collections.emptyMap());

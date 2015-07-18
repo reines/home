@@ -12,7 +12,7 @@ import com.furnaghan.home.component.xbmc.client.types.api.PlayRequest;
 import com.furnaghan.home.component.xbmc.client.types.player.notifications.Data;
 import com.furnaghan.home.component.xbmc.client.types.api.PlayerStopData;
 import com.furnaghan.home.component.xbmc.client.types.api.VolumeData;
-import com.furnaghan.home.util.JsonUtils;
+import com.furnaghan.home.util.JsonUtil;
 import com.google.common.collect.Range;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class XbmcComponent extends Component<XbmcComponent.Listener> implements 
     private static final int PLAYER_PICTURE = 2;
 
     public static void main(final String... args) throws IOException {
-        final XbmcComponent xbmc = new XbmcComponent(JsonUtils.newObjectMapper().readValue("{\"address\":\"localhost:9090\"}", XbmcConfiguration.class));
+        final XbmcComponent xbmc = new XbmcComponent(JsonUtil.newObjectMapper().readValue("{\"address\":\"localhost:9090\"}", XbmcConfiguration.class));
         xbmc.send("title", "message");
     }
 

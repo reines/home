@@ -10,7 +10,9 @@ var Component = Backbone.Model.extend({
         title: 'Unknown',
         type: {},
         config_type: {},
-        inherited_types: []
+        inherited_types: [],
+        events: [],
+        actions: []
     },
     parse: function(response) {
         var key = _.first(response);
@@ -21,7 +23,9 @@ var Component = Backbone.Model.extend({
             config_type: NamedType(value.configuration.name, value.configuration.type),
             inherited_types: _.map(value.types, function(type) {
                 return NamedType(type.name, type.type);
-            })
+            }),
+            events: value.events,
+            actions: value.actions
         };
     }
 });
@@ -36,17 +40,21 @@ var Components = Backbone.Collection.extend({
 
 var ComponentType = Backbone.Model.extend({
     defaults: {
-        type: {},
+        name: {},
+        config_type: {},
         inherited_types: [],
-        config_type: {}
+        events: [],
+        actions: []
     },
-    parse: function(response) {
+    parse: function(value) {
         return {
-            name: NamedType(response.name.name, response.name.type),
-            inherited_types: _.map(response.types, function(type) {
+            name: NamedType(value.name.name, value.name.type),
+            config_type: NamedType(value.configuration.name, value.configuration.type),
+            inherited_types: _.map(value.types, function(type) {
                 return NamedType(type.name, type.type);
             }),
-            config_type: NamedType(response.configuration.name, response.configuration.type)
+            events: value.events,
+            actions: value.actions
         };
     }
 });

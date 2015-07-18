@@ -8,12 +8,24 @@ var HTMLCell = Backgrid.Cell.extend({
     }
 });
 
+var NamedTypeFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
+    fromRaw: function(rawValue, model) {
+        return $("<span>", {
+            title: rawValue.type
+        }).text(rawValue.name)[0].outerHTML;
+    }
+});
+
 var NamedTypeCell = HTMLCell.extend({
-    formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
-        fromRaw: function(rawValue, model) {
-            return $("<span>", {
-                title: rawValue.type
-            }).text(rawValue.name)[0].outerHTML;
-        }
-    })
+    formatter: NamedTypeFormatter
+});
+
+var StringArrayFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
+    fromRaw: function(rawValue, model) {
+        return rawValue.join(', ');
+    }
+});
+
+var StringArrayCell = Backgrid.Cell.extend({
+    formatter: StringArrayFormatter
 });

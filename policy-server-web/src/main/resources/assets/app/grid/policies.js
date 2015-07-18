@@ -14,12 +14,22 @@ var PoliciesGrid = Backgrid.Grid.extend({
         })
     }, {
         name: 'event',
+        label: 'Type',
+        cell: 'string',
+        editable: false,
+        formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
+            fromRaw: function(rawValue, model) {
+                return rawValue.type.type;
+            }
+        })
+    }, {
+        name: 'event',
         label: 'Event',
         cell: 'string',
         editable: false,
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
             fromRaw: function(rawValue, model) {
-                return rawValue.type.type + '#' + rawValue.method;
+                return rawValue.method;
             }
         })
     }]

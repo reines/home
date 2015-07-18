@@ -1,12 +1,12 @@
 var ComponentTypesGrid = Backgrid.Grid.extend({
     columns: [{
         name: 'name',
-        label: 'Type',
+        label: 'Component',
         cell: NamedTypeCell,
         editable: false
     }, {
         name: 'inherited_types',
-        label: 'Inherited Types',
+        label: 'Types',
         cell: 'string',
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
             fromRaw: function(rawValue, model) {
@@ -19,7 +19,24 @@ var ComponentTypesGrid = Backgrid.Grid.extend({
     }, {
         name: 'config_type',
         label: 'Configuration',
-        cell: NamedTypeCell,
+        cell: HTMLCell,
+        editable: false,
+        formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
+            fromRaw: function(rawValue, model) {
+                return $('<a>', {
+                    href: '/components/' + model.get('name').type + '/config_schema.json'
+                }).html(NamedTypeFormatter.fromRaw(rawValue, model))[0].outerHTML;
+            }
+        })
+    }, {
+        name: 'events',
+        label: 'Events',
+        cell: StringArrayCell,
+        editable: false
+    }, {
+        name: 'actions',
+        label: 'Actions',
+        cell: StringArrayCell,
         editable: false
     }]
 });
@@ -28,20 +45,24 @@ var ComponentsGrid = Backgrid.Grid.extend({
     columns: [{
         name: 'title',
         label: 'Title',
+        cell: 'string',
+        editable: false
+    }, {
+        name: 'type',
+        label: 'Component',
+        cell: NamedTypeCell,
+        editable: false
+    }, {
+        name: 'config_type',
+        label: 'Configuration',
         cell: HTMLCell,
         editable: false,
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
             fromRaw: function(rawValue, model) {
-                return $("<a>", {
-                    tabIndex: -1,
+                return $('<a>', {
                     href: '/components/' + model.get('type').type + '/' + model.get('title') + '/config.json'
-                }).text(rawValue)[0].outerHTML;
+                }).html(NamedTypeFormatter.fromRaw(rawValue, model))[0].outerHTML;
             }
         })
-    }, {
-        name: 'type',
-        label: 'Type',
-        cell: NamedTypeCell,
-        editable: false
     }]
 });

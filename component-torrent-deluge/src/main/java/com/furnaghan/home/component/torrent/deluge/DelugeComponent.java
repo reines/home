@@ -23,7 +23,8 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
         client = new DelugeClient(
                 JerseyClientFactory.build("deluge-" + configuration.getAddress(), configuration),
                 configuration.getAddress(),
-                configuration.getPollInterval()
+                configuration.getPollInterval(),
+                configuration.getPassword()
         );
         client.addStateListener(new StateListener() {
             @Override
@@ -51,7 +52,6 @@ public class DelugeComponent extends Component<TorrentType.Listener> implements 
                 }
             }
         });
-        client.login(configuration.getPassword());
         client.start();
     }
 
